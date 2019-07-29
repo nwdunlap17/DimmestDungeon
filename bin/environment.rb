@@ -1,3 +1,5 @@
 require 'curses'
 require 'pry'
 require 'json'
+require_relative '../lib/Menu.rb'
+require_relative '../lib/Action.rb'
