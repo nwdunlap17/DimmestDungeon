@@ -1,5 +1,6 @@
 class CombatManager
-    attr_accessor :heroes_position
+    attr_accessor :heroes_position, :monsters_position, :combat_is_over, :heroes_alive, :monsters_alive, :heroes_aggro
+
     def initialize(heroes_array,monsters_array)
         #index 1-2 are front, 3-4 back
         #each array position should contain an object instance of representative thing
@@ -8,7 +9,7 @@ class CombatManager
     @monsters_alive = true
     @heroes_position = heroes_array
     @monsters_position = monsters_array
-    heroes_aggro = []
+    @heroes_aggro = []
     end
 
     def battle_sequence
@@ -30,7 +31,29 @@ class CombatManager
         end
     end
 
-    def add_aggro
+    def change_aggro(character,change_value)
+        #change_value can be a positive or negative number
+        #character = object, change_value = integer
+        new_heroes = []
+        if change_value > 0
+            change_value.times do 
+                @heroes_aggro << character
+            end
+        elsif change_value < 0
+            if @heroes_aggro.count(character) > change_value.abs
+                counter = change_value.abs
+                while counter != 0
+                    @heroes_aggro = @heroes_aggro.map do |hero|
+                        if hero == character 
+                            hero = nil
+                            counter -= 1
+                        else
+                            hero
+                        end
+                    end.compact
+                end
+            end
+        end
     end
 
     def apply_damage(damaged_object,damage_dealt)
@@ -62,11 +85,65 @@ class CombatManager
             end
         end
     end
-    
+
 
         #invisibility pulls one aggro
         #increase aggro adds two aggro
         #heroes_aggro.sample = defender
 
+        # actor is Combatant
+# action is used Action
+# defenders and allied_targets are arrays of Combatants
+def execute_action(actor,action,damage_targets,buff_targets)
+    damage_targets.each do |target|
+        deal_damage(attacker,defender,action)
+    end
+    buff_targets.each do |target|
+        apply_buff(target,action)
+        if (action.aggro_change != 0)
+            change_aggro(target,action.aggro_change)
+        end
+    end
+ end
+ 
+ def deal_damage(attacker,defender,action)
+    attack_power = attacker.atk * attacker.atk_multi
+    defense_power = defender.def * defender.def_multi
+    damage_dealt = (attack_power * 4) - (defense_power * 2)
+    damage_dealt = damage_dealt.round
+    defender.current_hp -= damage_dealt
+ end
+
+ def apply_buff(target, action)
+    target.atk_multi += action.atk_buff
+    target.def_multi += action.def_buff
+    target.current_hp += target.max_hp * action.heal_value
+    target.current_hp.round
+    if target.current_hp > target.max_hp
+        target.current_hp = target.max_hp
+    end
+ end
+
+ def select_target(actor, action, enemy_array, ally_array)
+    enemy_targets = []
+    ally_targets = []
+    if action.target_self
+        ally_targets << actor
+    end
+    case action.selection_type
+    when "none"
+    when "All Enemies"
+        enemy_targets = enemy_array
+    when "All Allies"
+        allied_targets = ally_array
+    when "1 Enemy"
+        enemy_names = enemy_array.map {|foe| foe.name}
+        enemy_targets << Menu.new(enemy_names,enemy_array,5,0)
+    when "1 Ally"
+        ally_names = ally_array.map {|ally| ally.name}
+        ally_targets << Menu.new(enemy_names,enemy_array,5,0)
+    end
+    execute_action(actor,action,enemy_targets,allied_targets)
+ end
 
 end
