@@ -20,7 +20,11 @@ class CombatManager
                 battle_array = heroes.concat(monsters)
             end
             character_picked = battle_array.sample
-            #some course of action 
+            if heroes_position.include?(character_picked)
+                select_target(character_picked, Action.basic_attack,monsters_position,heroes_position)
+            else
+                #monster
+            end
             battle_array.delete(character_picked)
             self.check_for_dead
         end
@@ -105,7 +109,7 @@ def execute_action(actor,action,damage_targets,buff_targets)
         end
     end
  end
- 
+
  def deal_damage(attacker,defender,action)
     attack_power = attacker.atk * attacker.atk_multi
     defense_power = defender.def * defender.def_multi
