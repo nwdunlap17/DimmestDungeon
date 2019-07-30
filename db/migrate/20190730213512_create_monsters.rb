@@ -6,6 +6,8 @@ class CreateMonsters < ActiveRecord::Migration[5.2]
       m.integer :atk
       m.integer :defense
       m.integer :max_HP
+
+      m.timestamps
     end
   end
 end

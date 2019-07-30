@@ -6,6 +6,8 @@ class CreateAdventurers < ActiveRecord::Migration[5.2]
       a.integer :atk
       a.integer :def
       a.integer :max_HP
+      
+      a.timestamps
     end
   end
 end

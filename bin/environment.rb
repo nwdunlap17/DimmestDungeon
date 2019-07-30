@@ -20,5 +20,5 @@ Bundler.require
 
 ActiveRecord::Base.establish_connection(
    :adapter => "sqlite3",
-   :database => "../db/dungeon.db"
+   :database => "db/development.db"
 )
