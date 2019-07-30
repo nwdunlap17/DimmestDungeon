@@ -14,13 +14,15 @@ class Action
         @aggro_change = 0
     end
 
-    def make_basic_attack
-        @selection_type = "1 Enemy"
-        @Damage_Multiplier = 1
-        @target_self = false
-        @atk_buff = 0
-        @def_buff = 0
-        @heal_value = 0
-        @aggro_change = 0
+    def Action.basic_attack
+        skill = Action.new
+        skill.selection_type = "1 Enemy"
+        skill.Damage_Multiplier = 1
+        skill.target_self = false
+        skill.atk_buff = 0
+        skill.def_buff = 0
+        skill.heal_value = 0
+        skill.aggro_change = 0
+        return skill
     end
 end

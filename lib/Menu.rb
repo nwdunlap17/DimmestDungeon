@@ -50,7 +50,7 @@ class Menu
 
         Curses.setpos(@y+@index,@x)
         Curses.addstr("-->")
-        
+
         Curses.refresh
     end
 end
