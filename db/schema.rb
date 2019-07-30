@@ -10,16 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_30_213618) do
+ActiveRecord::Schema.define(version: 2019_07_30_231625) do
 
-  create_table "adventurers", force: :cascade do |t|
-    t.string "name"
-    t.string "from"
-    t.integer "atk"
-    t.integer "def"
-    t.integer "max_HP"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table "battles", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "monster_id"
   end
 
   create_table "monsters", force: :cascade do |t|
@@ -30,6 +25,11 @@ ActiveRecord::Schema.define(version: 2019_07_30_213618) do
     t.integer "max_HP"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.integer "atk"
   end
 
 end
