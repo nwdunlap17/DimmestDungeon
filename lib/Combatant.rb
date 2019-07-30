@@ -1,10 +1,8 @@
 class Combatant
-    attr_accessor :name #TEMPORARY, REMOVE EVENTUALLY
     attr_accessor :current_HP, :max_HP
     attr_reader :atk, :defense, :atk_multi, :def_multi
 
     def initialize(attack,defense=0,max_HP)
-        @name = "Slime" #TEMPORARY, REMOVE THIS LINE EVENTUALLY
         @atk = attack
         @defense = defense
         @max_HP = max_HP

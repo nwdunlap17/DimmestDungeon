@@ -41,7 +41,9 @@ class CombatManager
     def display
         Curses.clear
         Curses.setpos(0,0)
-        Curses.addstr "Slime HP: #{monsters_position[0].current_HP}"
+        @monsters_position.length.times do  |index|
+            Curses.addstr "#{monsters_position[index].name} HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP} \n"
+        end
         Curses.refresh
     end
 
