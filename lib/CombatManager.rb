@@ -10,10 +10,13 @@ class CombatManager
     @heroes_position = heroes_array
     @monsters_position = monsters_array
     @heroes_aggro = []
+    battle_sequence
     end
 
     def battle_sequence
+        battle_array = []
         while @combat_is_over == false
+            display
             if battle_array.empty? == true
                 heroes = heroes_position
                 monsters = monsters_position
@@ -33,6 +36,13 @@ class CombatManager
         elsif monsters_alive == false
             #YEET we won
         end
+    end
+
+    def display
+        Curses.clear
+        Curses.setpos(0,0)
+        Curses.addstr "Slime HP: #{monsters_position[0].current_HP}"
+        Curses.refresh
     end
 
     def change_aggro(character,change_value)
@@ -75,7 +85,7 @@ class CombatManager
                 heroes_aggro.delete(hero)
                 if heroes_position.empty? == true
                     @heroes_alive = false
-                    @combat_is_over == true
+                    @combat_is_over = true
                 end
             end
         end
@@ -84,7 +94,7 @@ class CombatManager
                 monsters_position.delete(monster)
                 if monsters_position.empty? == true
                     @monsters_alive = false
-                    @combat_is_over == true
+                    @combat_is_over = true
                 end
             end
         end
@@ -100,7 +110,7 @@ class CombatManager
 # defenders and allied_targets are arrays of Combatants
 def execute_action(actor,action,damage_targets,buff_targets)
     damage_targets.each do |target|
-        deal_damage(attacker,defender,action)
+        deal_damage(actor,target,action)
     end
     buff_targets.each do |target|
         apply_buff(target,action)
@@ -112,19 +122,19 @@ def execute_action(actor,action,damage_targets,buff_targets)
 
  def deal_damage(attacker,defender,action)
     attack_power = attacker.atk * attacker.atk_multi
-    defense_power = defender.def * defender.def_multi
+    defense_power = defender.defense * defender.def_multi
     damage_dealt = (attack_power * 4) - (defense_power * 2)
     damage_dealt = damage_dealt.round
-    defender.current_hp -= damage_dealt
+    defender.current_HP -= damage_dealt
  end
 
  def apply_buff(target, action)
     target.atk_multi += action.atk_buff
     target.def_multi += action.def_buff
-    target.current_hp += target.max_hp * action.heal_value
-    target.current_hp.round
-    if target.current_hp > target.max_hp
-        target.current_hp = target.max_hp
+    target.current_HP += target.max_HP * action.heal_value
+    target.current_HP.round
+    if target.current_HP > target.max_HP
+        target.current_HP = target.max_HP
     end
  end
 
@@ -142,12 +152,12 @@ def execute_action(actor,action,damage_targets,buff_targets)
         allied_targets = ally_array
     when "1 Enemy"
         enemy_names = enemy_array.map {|foe| foe.name}
-        enemy_targets << Menu.new(enemy_names,enemy_array,5,0)
+        enemy_targets << Menu.start(enemy_names,enemy_array,5,0)
     when "1 Ally"
         ally_names = ally_array.map {|ally| ally.name}
-        ally_targets << Menu.new(enemy_names,enemy_array,5,0)
+        ally_targets << Menu.start(enemy_names,enemy_array,5,0)
     end
-    execute_action(actor,action,enemy_targets,allied_targets)
+    execute_action(actor,action,enemy_targets,ally_targets)
  end
 
 end
