@@ -16,18 +16,27 @@ class CombatManager
     def battle_sequence
         battle_array = []
         while @combat_is_over == false
-            display
+
+            #Refresh initiative order
             if battle_array.empty? == true
-                heroes = heroes_position
-                monsters = monsters_position
-                battle_array = heroes.concat(monsters)
+                battle_array = []
+                heroes_position.each do |hero|
+                    battle_array << hero
+                end
+                monsters_position.each do |monster|
+                    battle_array << monster
+                end
             end
+
             character_picked = battle_array.sample
+    
+            display(character_picked)
             if heroes_position.include?(character_picked)
                 select_target(character_picked, Action.basic_attack,monsters_position,heroes_position)
             else
                 #monster
             end
+
             battle_array.delete(character_picked)
             self.check_for_dead
         end
@@ -38,11 +47,20 @@ class CombatManager
         end
     end
 
-    def display
+    def display(character_picked)
         Curses.clear
         Curses.setpos(0,0)
         @monsters_position.length.times do  |index|
-            Curses.addstr "#{monsters_position[index].name} HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP} \n"
+            Curses.addstr " #{monsters_position[index].name} HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP} \n"
+        end
+        start_display_line = 5
+        @heroes_position.length.times do  |index|
+            Curses.setpos(start_display_line+index,0)
+            Curses.addstr " #{heroes_position[index].name} HP: #{heroes_position[index].current_HP} / #{heroes_position[index].max_HP}"
+            if character_picked == @heroes_position[index]
+                Curses.setpos(start_display_line+index,0)
+                Curses.addstr ">"
+            end
         end
         Curses.refresh
     end
@@ -154,10 +172,10 @@ def execute_action(actor,action,damage_targets,buff_targets)
         allied_targets = ally_array
     when "1 Enemy"
         enemy_names = enemy_array.map {|foe| foe.name}
-        enemy_targets << Menu.start(enemy_names,enemy_array,5,0)
+        enemy_targets << Menu.start(enemy_names,enemy_array,10,0)
     when "1 Ally"
         ally_names = ally_array.map {|ally| ally.name}
-        ally_targets << Menu.start(enemy_names,enemy_array,5,0)
+        ally_targets << Menu.start(enemy_names,enemy_array,10,0)
     end
     execute_action(actor,action,enemy_targets,ally_targets)
  end

@@ -1,8 +1,8 @@
-class Combatant
-    attr_accessor :current_HP, :max_HP
-    attr_reader :atk, :defense, :atk_multi, :def_multi
+module Combatant
+    attr_accessor :current_HP, :max_HP, :stunned
+    attr_accessor :atk, :defense, :atk_multi, :def_multi
 
-    def initialize(attack,defense=0,max_HP)
+    def initialize(attack=4,defense=0,max_HP=10)
         @atk = attack
         @defense = defense
         @max_HP = max_HP
