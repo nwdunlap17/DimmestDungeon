@@ -75,7 +75,7 @@ class CombatManager
                 heroes_aggro.delete(hero)
                 if heroes_position.empty? == true
                     @heroes_alive = false
-                    @combat_is_over == true
+                    @combat_is_over = true
                 end
             end
         end
@@ -84,7 +84,7 @@ class CombatManager
                 monsters_position.delete(monster)
                 if monsters_position.empty? == true
                     @monsters_alive = false
-                    @combat_is_over == true
+                    @combat_is_over = true
                 end
             end
         end
