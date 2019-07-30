@@ -86,7 +86,6 @@ class Action
         @@Cleric_list << Action.make_buff("Bless","all",0.5,0,0)
         @@Cleric_list << Action.make_buff("Mass Heal","all",0,0,0.2)
         @@Cleric_list << Action.make_buffing_attack("Smite",2,0,0,0,0.2)
-
     end
 
 
