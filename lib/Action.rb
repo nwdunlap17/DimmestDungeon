@@ -23,5 +23,6 @@ class Action
         skill.def_buff = 0
         skill.heal_value = 0
         skill.aggro_change = 0
+        return skill
     end
 end
