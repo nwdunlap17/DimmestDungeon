@@ -1,3 +1,4 @@
+
 require_relative('environment.rb')
 
 Action.Load_Action_List
@@ -16,4 +17,3 @@ monsters = [slime,boblin]
 
 #Kernel.srand(5)
 CombatManager.new(heros,monsters)
-
