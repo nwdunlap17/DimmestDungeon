@@ -4,9 +4,10 @@ class Room
 attr_writer :description, :door_appearance
     def initialize(depth)
     @dungeon_depth = depth
+    @type = set_type
     @description = ""
     @door_appearance = ""
-    @type = set_type
+    @room_type = ""
     end
 
     def set_type
@@ -30,7 +31,12 @@ attr_writer :description, :door_appearance
         descriptors = ["beautiful","magnificient","gorgeous","golden","splendid","brilliant","shining","glorious","grand","grandiose","stately","noble","marvelous"]
         door_description = "Ahead stands a" + descriptors.sample + "door, which leaves your party awestruck."
         @description = door_description
+        @room_type = "treasure_room"
         #puts "You've found a treasure chest!"
+    end
+
+    def enter_treasure_room(party_instance,text_log)
+
     end
 
     def monster_room
@@ -38,20 +44,28 @@ attr_writer :description, :door_appearance
         descriptors = ["imposing","monstrous","ominous","dreadful","gloomy","ghastly","horrid","hideous","macabre","unpleasant","terrifying","repulsive","revolting","distasteful","sanguine"]
         door_description = "Looming ahead, a" + descriptors.sample + "door beckons..."
         @description = door_description
+        @room_type = "monster_room"
+    end
+
+    def enter_monster_room(party_instance,text_log)
         amount_slimes = rand(4)+1
         monsters_position = []
         length = Monster.all.length
         amount_slimes.times do
             monsters_position << Monster.new_monster
         end
-        CombatManager.new(Party.heroes_array,monsters_position)
+        CombatManager.new(party_instance,monsters_position,text_log)
     end
 
-    def safe_room(party_instance) 
+    def safe_room
         @door_appearance = "modern_door"
         descriptors = ["enticing haven","blissful sanctuary","protected garden","secure home","guarded asylum","preserved alcove","hallowed clearing"]
         door_description = "An inscription on the door reads: Within lies an oasis, a " + descriptors.sample + " blessed with protective sigils awaits!"
         @description = door_description
+        @room_type = "safe_room"
+    end
+
+    def enter_safe_room(party_instance,text_log)
         #input is a party instance's heroes_array => which contains adventurer instances
         party_instance.heroes_array.each do |hero|
             #puts "#{hero.name} has been healed for #{hero.max_HP - hero.current_HP} health! Health is now #{hero.max_HP}/#{hero.max_HP}."
@@ -64,9 +78,28 @@ attr_writer :description, :door_appearance
     def boss_room
         @door_appearance = "passage_way"
         @door_description = "Heavy breaths sends hot, repugnant air over your party. By the way the hair sticks up on your neck, you can tell something sinister lies in the depths of this passage."
+        @room_type = "boss_room"
+    end
+    
+    def enter_boss_room(party_instance,text_log)
         monsters_position = []
         monsters_position << Monster.new_boss_monster
-        CombatManager.new(Party.new.heroes_array,monsters_position)
+        CombatManager.new(party_instance,monsters_position,text_log)
     end
+
+    def door_selection(party_instance,text_log)
+        case room.room_type 
+            when "treasure_room"
+                room.enter_treasure_room(party_instance,text_log)
+            when "monster_room"
+                room.enter_monster_room(party_instance,text_log)
+            when "safe_room"
+                room.enter_safe_room(party_instance,text_log)
+            when "boss_room"
+                room.enter_boss_room(party_instance,text_log)  
+        end
+    end  
 end
+
+
 

@@ -10,10 +10,12 @@ class Adventurer < ActiveRecord::Base
         super
         current_MP = max_MP
     end
+
     def full_heal
         current_HP = max_HP
         current_MP = max_MP
     end
+
     def self.manual_generation(name = "",attack=4,defense=0,max_HP=50,max_MP=10)
         hero = Adventurer.new
         hero.atk = attack

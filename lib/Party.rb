@@ -17,7 +17,12 @@ class Party
         self.heroes_array << member_instance
     end
 
-    def remove_party_member
+    def remove_party_member(hero_instance)
+        self.heroes_array.delete(hero_instance)
+    end
+
+    def add_party_member
+        
     end
 
 end
