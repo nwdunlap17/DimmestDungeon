@@ -11,7 +11,7 @@ end
 desc 'loads all tables'
 task :reload do
   #ActiveRecord::Base.logger = Logger.new(STDOUT)
-  system('rake db:rollback STEP=100')
+  system('rake db:rollback STEP=10')
   system('rake db:migrate')
   system('ruby bin/loadtables.rb')
 end
