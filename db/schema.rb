@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 2019_07_31_000246) do
     t.integer "atk"
     t.integer "defense"
     t.integer "max_HP"
+    t.integer "level"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
