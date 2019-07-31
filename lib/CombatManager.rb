@@ -26,6 +26,9 @@ class CombatManager
                 end
                 monsters_position.each do |monster|
                     battle_array << monster
+                    if monster.is_boss
+                        battle_array << monster
+                    end
                 end
             end
 
@@ -33,9 +36,10 @@ class CombatManager
     
             display(character_picked)
             if heroes_position.include?(character_picked)
-                #chosen_action = choose_action_for_character(character_picked)
-                #select_target(character_picked, chosen_action,monsters_position,heroes_position)
-                select_target(character_picked,Action.basic_attack,monsters_position,heroes_position)
+                chosen_action = choose_action_for_character(character_picked)
+                # binding.pry
+                select_target(character_picked, chosen_action,monsters_position,heroes_position)
+                #select_target(character_picked,Action.basic_attack,monsters_position,heroes_position)
             else
                 #monster
                 monsters_target = @heroes_aggro.sample
@@ -59,6 +63,7 @@ class CombatManager
         choices << adventurer.skill1
         choices << adventurer.skill2
         names_of_choices = []
+        #binding.pry
         choices.each do |action|
             names_of_choices << action.action_name
         end
@@ -172,7 +177,7 @@ class CombatManager
     end
 
  def deal_damage(attacker,defender,action)
-    attack_power = attacker.atk * attacker.atk_multi
+    attack_power = attacker.atk * attacker.atk_multi * action.damage_multiplier
     defense_power = defender.defense * defender.def_multi
     damage_dealt = (attack_power * 4) - (defense_power * 2)
     damage_dealt = damage_dealt.round
@@ -186,7 +191,7 @@ class CombatManager
     target.atk_multi += action.atk_buff
     target.def_multi += action.def_buff
     target.current_HP += target.max_HP * action.heal_value
-    target.current_HP.round
+    target.current_HP = target.current_HP.round
     if target.current_HP > target.max_HP
         target.current_HP = target.max_HP
     end
@@ -203,13 +208,13 @@ class CombatManager
     when "All Enemies"
         enemy_targets = enemy_array
     when "All Allies"
-        allied_targets = ally_array
+        ally_targets = ally_array
     when "1 Enemy"
         enemy_names = enemy_array.map {|foe| foe.name}
         enemy_targets << Menu.start(enemy_names,enemy_array,10,0)
     when "1 Ally"
         ally_names = ally_array.map {|ally| ally.name}
-        ally_targets << Menu.start(enemy_names,enemy_array,10,0)
+        ally_targets << Menu.start(ally_names,ally_array,10,0)
     end
     execute_action(actor,action,enemy_targets,ally_targets)
  end
