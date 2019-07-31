@@ -10,7 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_31_000246) do
+
+ActiveRecord::Schema.define(version: 2019_07_30_235631) do
+
+  create_table "actions", force: :cascade do |t|
+    t.text "action_name"
+    t.text "selection_type"
+    t.boolean "target_self"
+    t.integer "mp_cost"
+    t.decimal "damage_multiplier"
+    t.decimal "stun_chance"
+    t.decimal "atk_buff"
+    t.decimal "def_buff"
+    t.decimal "heal_value"
+    t.integer "aggro_change"
+  end
+
+  create_table "adventurers", force: :cascade do |t|
+    t.string "name"
+    t.string "job"
+    t.integer "atk"
+    t.integer "defense"
+    t.integer "max_HP"
+    t.integer "max_MP"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
 
   create_table "monsters", force: :cascade do |t|
     t.string "name"
@@ -21,5 +47,4 @@ ActiveRecord::Schema.define(version: 2019_07_31_000246) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
-
 end
