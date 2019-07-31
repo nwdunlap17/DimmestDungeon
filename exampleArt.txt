@@ -2,10 +2,14 @@ Monster HP 12/12					Depth: 13
 Monster
 Monster 
 
-
-
-		Text1
-		Text2
+		Hero3 attacks Monster2 for 3 damage!
+		Hero3 attacks Monster2 for 3 damage!
+		Hero3 attacks Monster2 for 3 damage!
+		Hero3 attacks Monster2 for 3 damage!
+		Hero3 attacks Monster2 for 3 damage!
+		Hero3 attacks Monster2 for 3 damage!
+		Hero3 attacks Monster2 for 3 damage!
+		Hero3 attacks Monster2 for 3 damage!
 		Hero3 attacks Monster2 for 3 damage!
 ----------------------------------
      Attack |  A skilly skill
@@ -112,17 +116,26 @@ Passage Way
 	|/         |
 
 
-	 __________
-	|
-        |
-	|
-	|
-	|
-	|
-	|
-	|	   
-	|	
-
+	        __
+	     __/##\
+            /######\
+	   /#######/
+	  /#######/
+	 /########\
+	 \#########\
+	  |#########|
+	 /#########/   
+	 \########/
+	        __
+	     __/  \
+            /      \
+	   /       /
+	  /       /
+	 /        \
+	 \         \
+	  |         |
+	 /         /   
+	 \        /
 
 	 __________
 	|
