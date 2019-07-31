@@ -15,8 +15,8 @@ require_relative '../lib/CombatManager.rb'
 # require_relative '../lib/Adventurer.rb'
 # require_relative '../lib/Monster.rb'
 require_relative '../lib/Textlog.rb'
-require_relative '../app/models/battle.rb'
-require_relative '../app/models/user.rb'
+require_relative '../app/models/treasure.rb'
+require_relative '../app/models/adventurer.rb'
 require_relative '../app/models/monster.rb'
 
 Bundler.require
