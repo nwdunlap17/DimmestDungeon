@@ -44,7 +44,7 @@ attr_writer :description, :door_appearance
         monsters_position = []
         length = Monster.all.length
         amount_slimes.times do
-           monsters_position << Monster.find(id:rand(length))
+            monsters_position << Monster.new_monster
         end
         CombatManager.new(Party.heroes_array,monsters_position)
     end
@@ -67,7 +67,7 @@ attr_writer :description, :door_appearance
         @door_appearance = passage_way
         @door_description = "Heavy breaths sends hot, repugnant air over your party. By the way the hair sticks up on your neck, you can tell something sinister lies in the depths of this passage."
         monsters_position = []
-        monsters_position << Monster.find(level:6)
+        monsters_position << Monster.new_boss_monster
         CombatManager.new(Party.heroes_array,monsters_position)
     end
 end

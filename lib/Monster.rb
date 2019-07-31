@@ -31,4 +31,16 @@ class Monster  < ActiveRecord::Base
             Monster.create(name: name, description: description, atk: attack, defense: 0, max_HP: health, level: level)
         end
     end
+
+    def new_boss_monster
+        new_monster = Monster.find_by(level:6)
+        new_monster.get_ready_for_combat
+        return new_monster
+    end
+
+    def new_monster
+        new_monster = Monster.find_by(level:3)
+        new_monster.get_ready_for_combat
+        return new_monster
+    end
 end
