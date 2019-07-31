@@ -9,6 +9,11 @@ module Combatant
         end
     end
 
+    def get_ready_for_combat   
+        self.current_HP = max_HP
+        self.reset_buffs
+    end
+
     def reset_buffs
         @atk_multi = 1
         @def_multi = 1

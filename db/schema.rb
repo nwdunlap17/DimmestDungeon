@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 2019_07_31_000246) do
     t.decimal "def_buff"
     t.decimal "heal_value"
     t.integer "aggro_change"
+    t.text "job"
   end
 
   create_table "adventurers", force: :cascade do |t|
@@ -32,6 +33,8 @@ ActiveRecord::Schema.define(version: 2019_07_31_000246) do
     t.integer "defense"
     t.integer "max_HP"
     t.integer "max_MP"
+    t.integer "skill1_id"
+    t.integer "skill2_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -42,6 +45,7 @@ ActiveRecord::Schema.define(version: 2019_07_31_000246) do
     t.integer "atk"
     t.integer "defense"
     t.integer "max_HP"
+    t.integer "level"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

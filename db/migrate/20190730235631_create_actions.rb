@@ -11,6 +11,7 @@ class CreateActions < ActiveRecord::Migration[5.2]
       a.decimal :def_buff
       a.decimal :heal_value
       a.integer :aggro_change
+      a.text :job
     end
   end
 end
