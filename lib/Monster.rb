@@ -24,7 +24,7 @@ class Monster  < ActiveRecord::Base
         end
         new_monster.each do |minion_hash|
             attack = minion_hash["attack"]
-            health = minion_hash["cost"] * minion_hash["health"] + 1
+            health = (minion_hash["cost"] * minion_hash["health"] +1)*10
             name = minion_hash["name"]
             level = minion_hash["cost"]
             description = minion_hash["flavor"]
@@ -32,13 +32,13 @@ class Monster  < ActiveRecord::Base
         end
     end
 
-    def new_boss_monster
+    def self.new_boss_monster
         new_monster = Monster.find_by(level:6)
         new_monster.get_ready_for_combat
         return new_monster
     end
 
-    def new_monster
+    def self.new_monster
         new_monster = Monster.find_by(level:3)
         new_monster.get_ready_for_combat
         return new_monster

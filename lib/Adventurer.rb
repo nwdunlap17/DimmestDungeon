@@ -48,6 +48,7 @@ class Adventurer < ActiveRecord::Base
         4.times do 
             hero.random_stat_up
         end
+        hero.get_ready_for_combat
         return hero
     end
 

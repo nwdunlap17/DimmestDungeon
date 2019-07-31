@@ -31,11 +31,11 @@ class CombatManager
 
             character_picked = battle_array.sample
     
-            #display(character_picked)
+            display(character_picked)
             if heroes_position.include?(character_picked)
                 #chosen_action = choose_action_for_character(character_picked)
                 #select_target(character_picked, chosen_action,monsters_position,heroes_position)
-                #select_target(character_picked,Action.basic_attack,monsters_position,heroes_position)
+                select_target(character_picked,Action.basic_attack,monsters_position,heroes_position)
             else
                 #monster
                 monsters_target = @heroes_aggro.sample
@@ -172,7 +172,6 @@ class CombatManager
     end
 
  def deal_damage(attacker,defender,action)
-    binding.pry
     attack_power = attacker.atk * attacker.atk_multi
     defense_power = defender.defense * defender.def_multi
     damage_dealt = (attack_power * 4) - (defense_power * 2)

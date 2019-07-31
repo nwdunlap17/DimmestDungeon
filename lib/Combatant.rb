@@ -10,7 +10,7 @@ module Combatant
     end
 
     def get_ready_for_combat   
-        current_HP = max_HP
+        self.current_HP = max_HP
         self.reset_buffs
     end
 

@@ -3,10 +3,10 @@ class Room
 # rooms need to know what kind of room it is
 attr_writer :description, :door_appearance
     def initialize(depth)
-    @type = set_type
+    @dungeon_depth = depth
     @description = ""
     @door_appearance = ""
-    @dungeon_depth = depth
+    @type = set_type
     end
 
     def set_type
@@ -28,7 +28,7 @@ attr_writer :description, :door_appearance
     def treasure_room
         #when at the fork, the fork will generate the door appearance and the door description
         #then when a player selects a door option, the actual door contents are revealed
-        @door_appearance = curtain_door
+        @door_appearance = "curtain_door"
         descriptors = ["beautiful","magnificient","gorgeous","golden","splendid","brilliant","shining","glorious","grand","grandiose","stately","noble","marvelous"]
         door_description = "Ahead stands a" + descriptors.sample + "door, which leaves your party awestruck."
         @description = door_description
@@ -36,7 +36,7 @@ attr_writer :description, :door_appearance
     end
 
     def monster_room
-        @door_appearance = wooden_door
+        @door_appearance = "wooden_door"
         descriptors = ["imposing","monstrous","ominous","dreadful","gloomy","ghastly","horrid","hideous","macabre","unpleasant","terrifying","repulsive","revolting","distasteful","sanguine"]
         door_description = "Looming ahead, a" + descriptors.sample + "door beckons..."
         @description = door_description
@@ -50,7 +50,7 @@ attr_writer :description, :door_appearance
     end
 
     def safe_room(party_instance) 
-        @door_appearance = modern_door
+        @door_appearance = "modern_door"
         descriptors = ["enticing haven","blissful sanctuary","protected garden","secure home","guarded asylum","preserved alcove","hallowed clearing"]
         door_description = "An inscription on the door reads: Within lies an oasis, a " + descriptors.sample + " blessed with protective sigils awaits!"
         @description = door_description
@@ -64,11 +64,11 @@ attr_writer :description, :door_appearance
     end
 
     def boss_room
-        @door_appearance = passage_way
+        @door_appearance = "passage_way"
         @door_description = "Heavy breaths sends hot, repugnant air over your party. By the way the hair sticks up on your neck, you can tell something sinister lies in the depths of this passage."
         monsters_position = []
         monsters_position << Monster.new_boss_monster
-        CombatManager.new(Party.heroes_array,monsters_position)
+        CombatManager.new(Party.new.heroes_array,monsters_position)
     end
 end
 
