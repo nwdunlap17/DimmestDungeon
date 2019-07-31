@@ -67,7 +67,7 @@ class CombatManager
         choices.each do |action|
             names_of_choices << action.action_name
         end
-        Menu.start(names_of_choices,choices,10,20)
+        return Menu.start(names_of_choices,choices,10,20)
     end
 
     def display(character_picked)
