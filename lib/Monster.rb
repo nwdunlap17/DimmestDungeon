@@ -1,9 +1,9 @@
 
 class Monster  < ActiveRecord::Base
     has_many :treasures
-    has_many :monsters, through: :treasures
+    has_many :monsters, through: :treasures 
+    attr_accessor :is_boss
     include Combatant
-
 
     def self.manual_generation(name="Foo",atk=4,defense=0,max_HP=10)
         mon = Monster.new
@@ -34,12 +34,18 @@ class Monster  < ActiveRecord::Base
 
     def self.new_boss_monster
         new_monster = Monster.find_by(level:6)
+        new_monster.atk = new_monster.atk * 3
+        new_monster.max_HP = new_monster.max_HP * 10
+        new_monster.is_boss = true
         new_monster.get_ready_for_combat
         return new_monster
     end
 
     def self.new_monster
         new_monster = Monster.find_by(level:3)
+        new_monster.atk = new_monster.atk * 2
+        new_monster.max_HP = new_monster.max_HP * 5
+        new_monster.is_boss = false
         new_monster.get_ready_for_combat
         return new_monster
     end

@@ -26,8 +26,6 @@ attr_writer :description, :door_appearance
     end
 
     def treasure_room
-        #when at the fork, the fork will generate the door appearance and the door description
-        #then when a player selects a door option, the actual door contents are revealed
         @door_appearance = "curtain_door"
         descriptors = ["beautiful","magnificient","gorgeous","golden","splendid","brilliant","shining","glorious","grand","grandiose","stately","noble","marvelous"]
         door_description = "Ahead stands a" + descriptors.sample + "door, which leaves your party awestruck."
