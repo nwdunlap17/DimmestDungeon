@@ -24,7 +24,7 @@ class Monster  < ActiveRecord::Base
         end
         new_monster.each do |minion_hash|
             attack = minion_hash["attack"]
-            health = (minion_hash["cost"] * minion_hash["health"] +1)*10
+            health = (minion_hash["cost"] * minion_hash["health"] +1)
             name = minion_hash["name"]
             level = minion_hash["cost"]
             description = minion_hash["flavor"]
