@@ -35,7 +35,7 @@ attr_writer :description, :door_appearance
         #puts "You've found a treasure chest!"
     end
 
-    def enter_treasure_room
+    def enter_treasure_room(party_instance,text_log)
 
     end
 
@@ -47,14 +47,14 @@ attr_writer :description, :door_appearance
         @room_type = "monster_room"
     end
 
-    def enter_monster_room
+    def enter_monster_room(party_instance,text_log)
         amount_slimes = rand(4)+1
         monsters_position = []
         length = Monster.all.length
         amount_slimes.times do
             monsters_position << Monster.new_monster
         end
-        CombatManager.new(Party.heroes_array,monsters_position)
+        CombatManager.new(party_instance,monsters_position,text_log)
     end
 
     def safe_room
@@ -65,7 +65,7 @@ attr_writer :description, :door_appearance
         @room_type = "safe_room"
     end
 
-    def enter_safe_room(party_instance)
+    def enter_safe_room(party_instance,text_log)
         #input is a party instance's heroes_array => which contains adventurer instances
         party_instance.heroes_array.each do |hero|
             #puts "#{hero.name} has been healed for #{hero.max_HP - hero.current_HP} health! Health is now #{hero.max_HP}/#{hero.max_HP}."
@@ -81,22 +81,22 @@ attr_writer :description, :door_appearance
         @room_type = "boss_room"
     end
     
-    def enter_boss_room
+    def enter_boss_room(party_instance,text_log)
         monsters_position = []
         monsters_position << Monster.new_boss_monster
-        CombatManager.new(Party.new.heroes_array,monsters_position)
+        CombatManager.new(party_instance,monsters_position,text_log)
     end
 
-    def door_selection
+    def door_selection(party_instance,text_log)
         case room.room_type 
             when "treasure_room"
-                room.enter_treasure_room
+                room.enter_treasure_room(party_instance,text_log)
             when "monster_room"
-                room.enter_monster_room
+                room.enter_monster_room(party_instance,text_log)
             when "safe_room"
-                room.enter_safe_room
+                room.enter_safe_room(party_instance,text_log)
             when "boss_room"
-                room.enter_boss_room  
+                room.enter_boss_room(party_instance,text_log)  
         end
     end  
 end
