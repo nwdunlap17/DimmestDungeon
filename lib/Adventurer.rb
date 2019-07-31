@@ -5,6 +5,11 @@ class Adventurer < ActiveRecord::Base
 
     include Combatant
 
+
+    def get_ready_for_combat   
+        super
+        current_MP = max_MP
+    end
     def full_heal
         current_HP = max_HP
         current_MP = max_MP
