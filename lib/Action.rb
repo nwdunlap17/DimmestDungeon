@@ -32,7 +32,6 @@ class Action < ActiveRecord::Base
         skill.damage_multiplier = damage_multiplier
         skill.stun_chance = stun
 
-        skill.save
         return skill
     end
 
@@ -52,7 +51,6 @@ class Action < ActiveRecord::Base
         skill.def_buff = defense
         skill.heal_value = heal
         skill.aggro_change = aggro
-        skill.save
         return skill
     end
 
@@ -67,7 +65,6 @@ class Action < ActiveRecord::Base
         skill.def_buff = defense
         skill.heal_value = heal
         skill.aggro_change = aggro
-        skill.save
         return skill
     end
 
@@ -75,24 +72,40 @@ class Action < ActiveRecord::Base
     @@Mage_list = []
     @@Cleric_list = []
     def Action.Load_Action_List
-        @@Mage_list << Action.make_attack("Fireball",true,1)
-        @@Mage_list << Action.make_attack("Death",false,3)
-        @@Mage_list << Action.make_attack("Flash",false,0,0.4)
-        @@Mage_list << Action.make_buff("Vanish","self",0,0,0,-1)
-        @@Mage_list << Action.make_buff("Shield","self",0,1,0)
+        skill = Action.make_attack("Fireball",true,1)
+        skill.save
+        skill = Action.make_attack("Death",false,3)
+        skill.save
+        skill = Action.make_attack("Flash",false,0,0.4)
+        skill.save
+        skill = Action.make_buff("Vanish","self",0,0,0,-1)
+        skill.save
+        skill = Action.make_buff("Shield","self",0,1,0)
+        skill.save
 
-        @@Fighter_list << Action.make_attack("Strike",false,3)
-        @@Fighter_list << Action.make_attack("Wallop",false,1,0.8)
-        @@Fighter_list << Action.make_buff("Bulk Up","self",0.5,0.5,0)
-        @@Fighter_list << Action.make_buff("Taunt","self",0,0,0,2)
-        @@Fighter_list << Action.make_buffing_attack("Rally",1,0,0,0,0.2)
-        @@Fighter_list << Action.make_buffing_attack("Charge!",1.5,0,0.5,0,0)
+        skill = Action.make_attack("Strike",false,3)
+        skill.save
+        skill = Action.make_attack("Wallop",false,1,0.8)
+        skill.save
+        skill = Action.make_buff("Bulk Up","self",0.5,0.5,0)
+        skill.save
+        skill = Action.make_buff("Taunt","self",0,0,0,2)
+        skill.save
+        skill = Action.make_buffing_attack("Rally",1,0,0,0,0.2)
+        skill.save
+        skill = Action.make_buffing_attack("Charge!",1.5,0,0.5,0,0)
+        skill.save
 
-        @@Cleric_list << Action.make_buff("Protect","all",0,0.5,0)
-        @@Cleric_list << Action.make_buff("Heal","one",0,0,0.6)
-        @@Cleric_list << Action.make_buff("Bless","all",0.5,0,0)
-        @@Cleric_list << Action.make_buff("Mass Heal","all",0,0,0.2)
-        @@Cleric_list << Action.make_buffing_attack("Smite",2,0,0,0,0.2)
+        skill = Action.make_buff("Protect","all",0,0.5,0)
+        skill.save
+        skill = Action.make_buff("Heal","one",0,0,0.6)
+        skill.save
+        skill = Action.make_buff("Bless","all",0.5,0,0)
+        skill.save
+        skill = Action.make_buff("Mass Heal","all",0,0,0.2)
+        skill.save
+        skill = Action.make_buffing_attack("Smite",2,0,0,0,0.2)
+        skill.save
     end
 
 

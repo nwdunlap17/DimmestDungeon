@@ -9,6 +9,7 @@ class Monster  < ActiveRecord::Base
         mon.defense = defense
         mon.max_HP = max_HP
         mon.current_HP = max_HP
+        mon.reset_buffs
         return mon
     end
 
