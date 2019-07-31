@@ -1,40 +1,44 @@
-class Action
-    attr_accessor :selection_type, :target_self, :mp_cost, :action_name
-    attr_accessor :damage_Multiplier, :atk_buff, :def_buff, :heal_value, :aggro_change, :stun_chance
+class Action < ActiveRecord::Base
+    #attr_accessor :selection_type, :target_self, :mp_cost, :action_name
+    #attr_accessor :damage_multiplier, :atk_buff, :def_buff, :heal_value, :aggro_change, :stun_chance
     #selection_type = "1 Enemy", "All Enemies", "1 Ally", "All allies"
     #target self
 
-    def initialize(name)
-        @action_name = name
-        @selection_type = "none"
-        @damage_Multiplier = 0
-        @mp_cost = 0
-        @target_self = false
-        @atk_buff = 0
-        @def_buff = 0
-        @heal_value = 0
-        @aggro_change = 0
-        @stun_chance = 0
-    end
+    #def initialize(name)
+    #     @action_name = name
+    #     @selection_type = "none"
+    #     @damage_multiplier = 0
+    #     @mp_cost = 0
+    #     @target_self = false
+    #     @atk_buff = 0
+    #     @def_buff = 0
+    #     @heal_value = 0
+    #     @aggro_change = 0
+    #     @stun_chance = 0
+    # end
 
     def Action.basic_attack
         return Action.make_attack("Attack",false,1,0)
     end
 
-    def Action.make_attack(name,targets_all,damage_Multiplier,stun=0)
-        skill = Action.new(name)
+    def Action.make_attack(name,targets_all,damage_multiplier,stun=0)
+        skill = Action.new
+        skill.action_name = name
         if targets_all
             skill.selection_type = "All Enemies"
         else
             skill.selection_type = "1 Enemy"
         end
-        skill.damage_Multiplier = damage_Multiplier
+        skill.damage_multiplier = damage_multiplier
         skill.stun_chance = stun
+
+        skill.save
         return skill
     end
 
     def Action.make_buff(name,target,atk,defense,heal,aggro=0)
-        skill = Action.new(name)
+        skill = Action.new
+        skill.action_name = name
         case target
         when "one"
             skill.selection_type = "1 Ally"
@@ -48,19 +52,22 @@ class Action
         skill.def_buff = defense
         skill.heal_value = heal
         skill.aggro_change = aggro
+        skill.save
         return skill
     end
 
-    def Action.make_buffing_attack(name,damage_Multiplier,stun,atk,defense,heal,aggro=0)
-        skill = Action.new(name)
+    def Action.make_buffing_attack(name,damage_multiplier,stun,atk,defense,heal,aggro=0)
+        skill = Action.new
+        skill.action_name = name
         skill.selection_type = "1 Enemy"
         skill.target_self = true
-        skill.damage_Multiplier = damage_Multiplier
+        skill.damage_multiplier = damage_multiplier
         skill.stun_chance = stun
         skill.atk_buff = atk
         skill.def_buff = defense
         skill.heal_value = heal
         skill.aggro_change = aggro
+        skill.save
         return skill
     end
 
