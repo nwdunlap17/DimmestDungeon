@@ -6,8 +6,8 @@ class Fork
     def initialize(depth)
         @dungeon_depth = depth
         @amount_of_rooms = generate_rooms
+        @room_numbers = []
         @rooms_in_fork = []
-        @fork_actions = []
     end
 
     def generate_rooms
@@ -15,29 +15,33 @@ class Fork
         @dungeon_depth = depth
         if depth % 10 != 0
             @rooms_in_fork << Room.new(depth)
+            @room_numbers << "Door 1"
         else
-            rooms.times do 
+            rooms.times do |counter|
             @rooms_in_fork << Room.new(depth)
+            @room_numbers << "Door #{counter}"
             end
         end
     end
 
-    def display_doors
-        
+    def wooden_door
+        wooden_door = ["___________","|  |  |  | |","|  |  |  | |","|  |  |  | |","|  |  |  |_|","|  |  |  |U|","|  |  |  | |","|  |  |  | |","|  |  |  | |","|__|__|__|_|"]
+        return wooden_door
     end
 
-    def door_selection
-        @rooms_in_fork.each do |room|
-            case room.room_type 
-            when "treasure_room"
-                @fork_actions << room.enter_treasure_room
-            when "monster_room"
-                @fork_actions << room.enter_monster_room
-            when "safe_room"
-                @fork_actions << room.enter_safe_room
-            when "boss_room"
-                @fork_actions << room.enter_boss_room
-            end   
+    def draw_many_doors 
+        Curse.clear
+        draw_door(door_string,y,x)
+        draw_door(door_string,y,x)
+        draw_door(door_string,y,x)
+    end
+
+    def draw_door(door_string,y,x)
+        Curses.setpos(y,x)
+        door_string.length.times do |counter|
+            Curses.addstr(door_string[counter])
+            Curses.setpos(y+counter)(x)
         end
-    end         
+        Curses.refresh
+    end       
 end
