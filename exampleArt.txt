@@ -1,7 +1,7 @@
-Monster HP 12/12					Depth: 13
-Monster
-Monster 
-Monster
+	Monster HP 12/12				Depth: 13
+ -->	Monster
+	Monster 
+	Monster
 		Hero3 attacks Monster2 for 3 damage!
 		Hero3 attacks Monster2 for 3 damage!
 		Hero3 attacks Monster2 for 3 damage!
@@ -11,12 +11,12 @@ Monster
 		Hero3 attacks Monster2 for 3 damage!
 		Hero3 attacks Monster2 for 3 damage!
 		Hero3 attacks Monster2 for 3 damage!
----------------------------------- 
-     Attack |  A skilly skill
- --> Skill1 |---------------------
-     Skill2 | Hero1  HP 12/12 MP 12/12	
-     Item   |>Hero2  HP 12/12
-     Flee   | Hero3  HP 12/12 MP 12/12
+0123456789012345678901234567890-------------------------------   13
+     Attack       |  A skilly skill
+ --> Invisibility |-------------------------
+     Skill2       | Hero1  HP 12/12 MP 12/12	
+     Item         |>Hero2  HP 12/12
+     Flee         | Hero3  HP 12/12 MP 12/12
 
 
 

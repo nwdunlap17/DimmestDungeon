@@ -1,6 +1,6 @@
 class Text_Log
-
-    def initialize(max_size = 13)
+    
+    def initialize(max_size = 9)
         @lines_of_Text = []
         @relevant_lines = 0
         @max_size = max_size
@@ -26,7 +26,7 @@ class Text_Log
         end
     end
 
-    def display_text(start_y, start_x)
+    def display_text(start_y=12, start_x=9)
         @lines_of_Text.length.times do |i|
             Curses.setpos(start_y - i, start_x)
             if i >= @relevant_lines

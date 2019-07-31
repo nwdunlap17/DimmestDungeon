@@ -1,13 +1,14 @@
 class CombatManager
     attr_accessor :heroes_position, :monsters_position, :combat_is_over, :heroes_alive, :monsters_alive, :heroes_aggro
 
-    def initialize(heroes_array,monsters_array)
+    def initialize(party,monsters_array,textlog)
         #index 1-2 are front, 3-4 back
         #each array position should contain an object instance of representative thing
+    @textlog = textlog
     @combat_is_over = false
     @heroes_alive = true
     @monsters_alive = true
-    @heroes_position = heroes_array
+    @heroes_position = party.heroes_array
     @monsters_position = monsters_array
     @heroes_aggro = []
     set_up_aggro(2)
@@ -67,25 +68,50 @@ class CombatManager
         choices.each do |action|
             names_of_choices << action.action_name
         end
-        return Menu.start(names_of_choices,choices,10,20)
+        return Menu.start(names_of_choices,choices,14,1)
     end
 
     def display(character_picked)
         Curses.clear
-        Curses.setpos(0,0)
+        display_menu_outline
+        Curses.setpos(0,9)
         @monsters_position.length.times do  |index|
             Curses.addstr " #{monsters_position[index].name} HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP} \n"
         end
-        start_display_line = 5
+        display_adventurers(character_picked)
+        Curses.refresh
+    end
+    
+    def display_menu_outline
+        Curses.setpos(13,0)
+        Curses.addstr ("-"*61)
+        6.times do |i|
+            Curses.setpos(14+i,18)
+            Curses.addstr("|")
+        end
+        Curses.setpos(15,19)
+        Curses.addstr ("-"*42)
+    end
+
+    def display_adventurers(character_picked)
+
+        start_display_line = 16
         @heroes_position.length.times do  |index|
-            Curses.setpos(start_display_line+index,0)
-            Curses.addstr " #{heroes_position[index].name} HP: #{heroes_position[index].current_HP} / #{heroes_position[index].max_HP}"
+            Curses.setpos(start_display_line+index,20)
+            Curses.addstr " #{heroes_position[index].name}"
+            Curses.setpos(start_display_line+index,36)
+            Curses.addstr"HP: #{heroes_position[index].current_HP} / #{heroes_position[index].max_HP}"
+            Curses.setpos(start_display_line+index,50)
+            Curses.addstr"MP: #{heroes_position[index].current_MP} / #{heroes_position[index].max_MP}"
+
+
+
+
             if character_picked == @heroes_position[index]
-                Curses.setpos(start_display_line+index,0)
+                Curses.setpos(start_display_line+index,19)
                 Curses.addstr ">"
             end
         end
-        Curses.refresh
     end
 
     def set_up_aggro(starting_aggro)
@@ -165,6 +191,7 @@ class CombatManager
     # action is used Action
     # defenders and allied_targets are arrays of Combatants
     def execute_action(actor,action,damage_targets,buff_targets)
+        @textlog.write("#{actor} used #{action.action_name}.")
         damage_targets.each do |target|
             deal_damage(actor,target,action)
         end
@@ -211,10 +238,10 @@ class CombatManager
         ally_targets = ally_array
     when "1 Enemy"
         enemy_names = enemy_array.map {|foe| foe.name}
-        enemy_targets << Menu.start(enemy_names,enemy_array,10,0)
+        enemy_targets << Menu.start(enemy_names,enemy_array,0,6)
     when "1 Ally"
         ally_names = ally_array.map {|ally| ally.name}
-        ally_targets << Menu.start(ally_names,ally_array,10,0)
+        ally_targets << Menu.start(ally_names,ally_array,9,0)
     end
     execute_action(actor,action,enemy_targets,ally_targets)
  end

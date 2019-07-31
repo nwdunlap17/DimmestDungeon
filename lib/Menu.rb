@@ -12,7 +12,7 @@ class Menu
     def initialize(choices, values, y = 15, x = 0)
         @choices = choices
         @values = values
-        @y = y+1
+        @y = y
         @x = x
         @index = 0
         @done = false
