@@ -10,8 +10,4 @@ banana = Room.new(10)
 
 # monsters = [slime,boblin]
 
-# nick = Adventurer.manual_generation("Nick",2,4,10)
-# katana = Adventurer.manual_generation("Katana",10,10,20)
-
-# heros = [nick,katana]
-# CombatManager.new(heros,monsters)
+# CombatManager.new(Party.new.heroes_array,monsters)
