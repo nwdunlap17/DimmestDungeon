@@ -1,4 +1,7 @@
+
 class Monster  < ActiveRecord::Base
+    has_many :treasures
+    has_many :monsters, through: :treasures
     include Combatant
 
 
@@ -18,6 +21,13 @@ class Monster  < ActiveRecord::Base
         monster_json = JSON.parse(api_response.body)
         new_monster = monster_json.select do |monster_hash|
             monster_hash[:type] == "MINION"
+        end
+        new_monster.each do |minion_hash|
+            attack = minion_hash[:attack]
+            health = minion_hash[:cost] * minion_hash[:health]
+            name = minion_hash[:name]
+            description = minion_hash[:flavor]
+            Monster.create(name: name, description: description, atk: attack, defense: 0, max_HP: health)
         end
     end
 end
