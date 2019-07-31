@@ -7,7 +7,8 @@ class Party
         end
     end
 
-    def add_to_party
+    def add_to_party(member_instance)
+        self.heroes_array << member_instance
     end
 
     def remove_party_member
