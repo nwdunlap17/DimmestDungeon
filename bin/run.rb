@@ -1,19 +1,18 @@
+
 require_relative('environment.rb')
 
-Action.Load_Action_List
+#Action.Load_Action_List
 
-hero = Adventurer.new(4,2,10)
-hero.name = "Katana"
-hero2 = Adventurer.new(2,4,10)
-hero2.name = "Nick"
-slime = Monster.new(4,1,100)
-slime.name = "Slime"
-boblin = Monster.new(4,1,100)
-boblin.name = "Boblin"
+Monster.load_monsters
+slime = Monster.manual_generation("Slime",4,0,20)
+boblin = Monster.manual_generation("Boblin",2,2,20)
 
-heros = [hero,hero2]
 monsters = [slime,boblin]
 
-#Kernel.srand(5)
+nick = Adventurer.manual_generation("Nick",2,4,10)
+katana = Adventurer.manual_generation("Katana",10,10,20)
+
+heros = [nick,katana]
 CombatManager.new(heros,monsters)
 
+Monster.load_monsters

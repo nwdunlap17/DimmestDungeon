@@ -10,6 +10,7 @@ class CombatManager
     @heroes_position = heroes_array
     @monsters_position = monsters_array
     @heroes_aggro = []
+    set_up_aggro(2)
     battle_sequence
     end
 
@@ -32,9 +33,13 @@ class CombatManager
     
             display(character_picked)
             if heroes_position.include?(character_picked)
-                select_target(character_picked, Action.basic_attack,monsters_position,heroes_position)
+                #chosen_action = choose_action_for_character(character_picked)
+                #select_target(character_picked, chosen_action,monsters_position,heroes_position)
+                select_target(character_picked,Action.basic_attack,monsters_position,heroes_position)
             else
                 #monster
+                monsters_target = @heroes_aggro.sample
+                execute_action(character_picked,Action.basic_attack,[monsters_target],[])
             end
 
             battle_array.delete(character_picked)
@@ -45,6 +50,19 @@ class CombatManager
         elsif monsters_alive == false
             #YEET we won
         end
+    end
+
+
+    def choose_action_for_character(adventurer)
+        choices = []
+        choices << Action.basic_attack
+        choices << adventurer.skill1
+        choices << adventurer.skill2
+        names_of_choices = []
+        choices.each do |action|
+            names_of_choices << action.action_name
+        end
+        Menu.start(names_of_choices,choices,10,20)
     end
 
     def display(character_picked)
@@ -63,6 +81,19 @@ class CombatManager
             end
         end
         Curses.refresh
+    end
+
+    def set_up_aggro(starting_aggro)
+        starting_aggro.times do
+            @heroes_position.each do |hero|
+                @heroes_aggro << hero
+            end
+        end
+        @heroes_position.each do |hero|
+            if hero.job == "Fighter"
+                @heroes_aggro << hero
+            end
+        end
     end
 
     def change_aggro(character,change_value)
@@ -126,25 +157,28 @@ class CombatManager
         #heroes_aggro.sample = defender
 
         # actor is Combatant
-# action is used Action
-# defenders and allied_targets are arrays of Combatants
-def execute_action(actor,action,damage_targets,buff_targets)
-    damage_targets.each do |target|
-        deal_damage(actor,target,action)
-    end
-    buff_targets.each do |target|
-        apply_buff(target,action)
-        if (action.aggro_change != 0)
-            change_aggro(target,action.aggro_change)
+    # action is used Action
+    # defenders and allied_targets are arrays of Combatants
+    def execute_action(actor,action,damage_targets,buff_targets)
+        damage_targets.each do |target|
+            deal_damage(actor,target,action)
+        end
+        buff_targets.each do |target|
+            apply_buff(target,action)
+            if (action.aggro_change != 0)
+                change_aggro(target,action.aggro_change)
+            end
         end
     end
- end
 
  def deal_damage(attacker,defender,action)
     attack_power = attacker.atk * attacker.atk_multi
     defense_power = defender.defense * defender.def_multi
     damage_dealt = (attack_power * 4) - (defense_power * 2)
     damage_dealt = damage_dealt.round
+    if damage_dealt < 1
+        damage_dealt = 1
+    end
     defender.current_HP -= damage_dealt
  end
 
