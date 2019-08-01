@@ -1,8 +1,9 @@
 class Tavern
     attr_accessor :carousel
-    def initialize(party_instance)
+    def initialize(party_instance,text_log)
         @carousel = []
         @party = party_instance
+        @text_log = text_log
         fill_carousel
         tavernLoop
     end
@@ -40,6 +41,7 @@ class Tavern
             input = Menu.start(["Recruit","Refresh","Back"],["Recruit","Refresh","Back"],Curses.lines-6,1)
             case input
             when "Recruit"
+            if @party.heroes_array.length < 4
                 arr =[]
                 @carousel.length.times do
                     arr << ""
@@ -47,6 +49,9 @@ class Tavern
                 hero_instance = Menu.start(arr,@carousel,1,0,[],3)
                 @party.heroes_array << hero_instance 
                 @carousel.delete(hero_instance)
+            else 
+                @text_log.write("Your party is full!")
+            end
             when "Refresh"
                 refresh_carousel
             when "Back"
