@@ -7,6 +7,7 @@ class CombatManager
     @textlog = textlog
     @combat_is_over = false
     @heroes_alive = true
+    @party = party
     @monsters_alive = true
     @heroes_position = party.heroes_array
     @monsters_position = monsters_array
@@ -72,43 +73,25 @@ class CombatManager
             names_of_choices << action.action_name
             description_of_choices << action.description
         end
-        return Menu.start(names_of_choices,choices,14,1,description_of_choices)
+        return Menu.start(names_of_choices,choices,Curses.lines-6,1,description_of_choices)
     end
 
     def display(character_picked)
         Curses.clear
-        display_menu_outline
+        @party.standard_menu_display
+        display_adventurers(character_picked)
         Curses.setpos(0,9)
         @monsters_position.length.times do  |index|
             Curses.addstr " #{monsters_position[index].name} HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP} \n"
         end
-        display_adventurers(character_picked)
         @textlog.display_text
         Curses.refresh
-    end
-    
-    def display_menu_outline
-        Curses.setpos(13,0)
-        Curses.addstr ("-"*61)
-        6.times do |i|
-            Curses.setpos(14+i,18)
-            Curses.addstr("|")
-        end
-        Curses.setpos(15,19)
-        Curses.addstr ("-"*42)
     end
 
     def display_adventurers(character_picked)
 
-        start_display_line = 16
+        start_display_line = Curses.lines-4
         @heroes_position.length.times do  |index|
-            Curses.setpos(start_display_line+index,20)
-            Curses.addstr " #{heroes_position[index].name}"
-            Curses.setpos(start_display_line+index,36)
-            Curses.addstr"HP: #{heroes_position[index].current_HP} / #{heroes_position[index].max_HP}"
-            Curses.setpos(start_display_line+index,50)
-            Curses.addstr"MP: #{heroes_position[index].current_MP} / #{heroes_position[index].max_MP}"
-
             if character_picked == @heroes_position[index]
                 Curses.setpos(start_display_line+index,19)
                 Curses.addstr ">"
@@ -258,7 +241,7 @@ class CombatManager
         enemy_targets << Menu.start(enemy_names,enemy_array,0,6,enemy_descriptions)
     when "1 Ally"
         ally_names = ally_array.map {|ally| ally.name}
-        ally_targets << Menu.start(ally_names,ally_array,9,0)
+        ally_targets << Menu.start(ally_names,ally_array,Curses.lines-11,0)
     end
     execute_action(actor,action,enemy_targets,ally_targets)
  end
