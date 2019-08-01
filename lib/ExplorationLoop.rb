@@ -9,14 +9,10 @@ class ExplorationLoop
     def select_room(fork_instance)
         while true
         choices = fork_instance.room_numbers 
-        choices << "Exit Dungeon"
+        choices << "Leave"
         display
         room = Menu.start(choices,fork_instance.rooms_in_fork,10,0)
-<<<<<<< HEAD
         if room == "Leave"
-=======
-        if room == "Exit Dungeon"
->>>>>>> 89205565d0fcdb0de156270c986422723d72cf74
             @depth = 0
             Tavern.new(@party)
         end
