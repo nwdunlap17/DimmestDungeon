@@ -36,7 +36,7 @@ attr_writer :description, :door_appearance
     end
 
     def enter_treasure_room(party_instance,text_log)
-
+        Treasure.GivePartyTreasure(party_instance,@depth)
     end
 
     def monster_room
