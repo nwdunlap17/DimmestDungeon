@@ -14,8 +14,8 @@ class Tavern
         still_in_town = true
         while still_in_town
             display
-            choices = ["Hire Member","View Party","To Dungeon","Heal Party!","Quit Game"]
-            input = Menu.start(choices,choices,Curses.lines-6,1,["After a few ales, anyone almost would join your party.","Take a look at the sorry lot you've gathered.","Nobody will find loot laying around all day.", "Nothing like a good brew to warm your bellies!","Done for the day?"])
+            choices = ["Hire Member","View Party","To Dungeon","Heal Party","Quit Game"]
+            input = Menu.start(choices,choices,Curses.lines-6,1,["After a few ales, anyone almost would join your party.","Take a look at the sorry lot you've gathered.","Nobody will find loot laying around all day.", "Nothing like a good brew to warm your bellies! cost: 25g","Done for the day?"])
             case input
             when "Hire Member"
                 if @party.heroes_array.length < 4
@@ -26,11 +26,16 @@ class Tavern
             when "View Party"
                 display(input)
                 dismiss_member_loop
-            when "Buy Drinks!"
-                @text_log.write("A few hearty drinks and your wounds and spirits are recovered!")
-                @party.heroes_array.each do |party_member|
-                    party_member.current_HP = party_member.max_HP
-                    party_member.current_MP = party_member.max_MP
+            when "Heal Party"
+                if @party.money >= 25
+                    @party.money -= 25
+                    @text_log.write("A few hearty drinks and your wounds and spirits are recovered!")
+                    @party.heroes_array.each do |party_member|
+                        party_member.current_HP = party_member.max_HP
+                        party_member.current_MP = party_member.max_MP
+                    end
+                else
+                    @text_log.write("You realize that you are too poor to addle your mind.")
                 end
             when "To Dungeon"
                 if @party.heroes_array.length >= 1
@@ -93,6 +98,10 @@ class Tavern
     def display(string="")
         Curses.clear
         @party.standard_menu_display
+        Curses.setpos(0,76)
+        Curses.addstr "Location: Tavern"
+        Curses.setpos(1,76)
+        Curses.addstr "Coins: #{@party.money}"
         case string
         when "Hire Member"
             display_adventurers(@carousel)

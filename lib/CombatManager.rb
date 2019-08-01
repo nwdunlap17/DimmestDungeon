@@ -171,6 +171,7 @@ class CombatManager
                 @textlog.write("#{hero.name} has died.")
                 heroes_position.delete(hero)
                 heroes_aggro.delete(hero)
+                @textlog.write("After the math, it seems that #{hero.name} has perished.")
                 if heroes_position.empty? == true
                     @heroes_alive = false
                     @combat_is_over = true
@@ -180,7 +181,7 @@ class CombatManager
         index = 0
         while index < self.monsters_position.length
             if monsters_position[index].alive? == false
-                @textlog.write("#{monsters_position[length].name} has been defeated.")
+                @textlog.write("#{monsters_position[index].name} has been slain.")
                 monsters_position.delete_at(index)
                 index = 0
                 if monsters_position.empty? == true
