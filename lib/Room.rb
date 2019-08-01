@@ -12,14 +12,14 @@ class Room
 
     def set_type
         if @dungeon_depth % 10 != 0
-            room_choice = rand(3)
+            room_choice = rand(5)
             case room_choice
                 when 0
                 treasure_room
-                when 1 
-                monster_room
-                when 2
+                when 1
                 safe_room
+                else
+                monster_room
             end
         else 
             boss_room
