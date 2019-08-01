@@ -45,17 +45,16 @@ class Tavern
     def stats_display(input)
         start_display_line = 7
         input.length.times do  |index|
-            #name
-            Curses.setpos(start_display_line+index,20)
+            Curses.setpos(start_display_line+index,10)
             Curses.addstr " #{input[index].name}"
-            Curses.setpos(start_display_line+index,36)
+            Curses.setpos(start_display_line+index,26)
             Curses.addstr"HP: #{input[index].max_HP}"
-            Curses.setpos(start_display_line+index,50)
+            Curses.setpos(start_display_line+index,34)
             Curses.addstr"MP: #{input[index].max_MP}"
-            Curses.setpos(start_display_line+index,50)
-            Curses.addstr"MP: #{input[index].max_MP}"
-            Curses.setpos(start_display_line+index,50)
-            Curses.addstr"MP: #{input[index].max_MP}"
+            Curses.setpos(start_display_line+index,42)
+            Curses.addstr"ATK: #{input[index].atk}"
+            Curses.setpos(start_display_line+index,51)
+            Curses.addstr"DEF: #{input[index].defense}"
         end
     end
     

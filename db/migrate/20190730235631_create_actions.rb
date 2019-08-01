@@ -2,6 +2,7 @@ class CreateActions < ActiveRecord::Migration[5.2]
   def change
     create_table :actions do |a|
       a.text :action_name
+      a.text :description
       a.text :selection_type
       a.boolean :target_self
       a.integer :mp_cost

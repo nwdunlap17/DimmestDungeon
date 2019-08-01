@@ -1,6 +1,4 @@
 class Treasure < ActiveRecord::Base
-    belongs_to :adventurer
-    belongs_to :monster
 
     def self.LoadTreasures
         # Treasure.defineMagicItem("Belt of Endurance",10,0,0,0)
@@ -62,7 +60,7 @@ class Treasure < ActiveRecord::Base
         treas.save
     end
 
-    def self.GivePartyTreasure(party, rarity_bonus)
+    def self.GivePartyTreasure(party, rarity_bonus,text_log)
         rarity_roll = rand(100) + rarity_bonus
 
         if rarity_roll <75 
@@ -84,11 +82,67 @@ class Treasure < ActiveRecord::Base
         end
     end
 
-    def self.give_money_to_party(party,given_treasure)
+    def self.give_money_to_party(party,given_treasure,text_log)
         value_mod = 100 + rand(41) - 20
         value_mod = value_mod /100.0
         total_worth = given_treasure.value * value_mod
-        
         party.money += total_worth
+        text_log.write("You found a #{given_treasure.name}!")
+        text_log.write("It's worth #{total_worth} coins.")
+    end
+    def self.give_magic_item_to_party(party,given_treasure,text_log)
+        self.display(party,given_treasure)
+        heros = party.heroes_position
+        choices = []
+        heros.length.times do 
+            choices << ""
+        end
+        selection = Menu.start(choices,heros,7,10)
+        selection.max_HP += given_treasure.max_HP
+        selection.current_HP += given_treasure.current_HP
+        selection.max_MP += given_treasure.max_MP
+        selection.current_MP += given_treasure.current_MP
+        selection.atk += given_treasure.attack
+        selection.defense += given_treasure.defense
+        Ownership.create(adventurer_id: selection.id, treasure_id: given_treasure.id)
+    end
+    def self.display(party,given_treasure)
+        Curses.clear
+        Curses.setpos(4,20)
+        Curses.addstr ("You found a #{given_treasure.name}")
+        Curses.setpos(5,20)
+        Curses.addstr ("#{given_treasure.description}")
+        Curses.setpos(6,20)
+        Curses.addstr ("Who gets it?")
+        
+        self.display_menu_outline
+        self.display_characters(party.heroes_position)
+        Curses.refresh
+    end
+    def self.display_characters(input)
+        start_display_line = 7
+        input.length.times do  |index|
+            Curses.setpos(start_display_line+index,10)
+            Curses.addstr " #{input[index].name}"
+            Curses.setpos(start_display_line+index,26)
+            Curses.addstr"HP: #{input[index].max_HP}"
+            Curses.setpos(start_display_line+index,34)
+            Curses.addstr"MP: #{input[index].max_MP}"
+            Curses.setpos(start_display_line+index,42)
+            Curses.addstr"ATK: #{input[index].atk}"
+            Curses.setpos(start_display_line+index,51)
+            Curses.addstr"DEF: #{input[index].defense}"
+        end
+    end
+        
+    def self.display_menu_outline
+        Curses.setpos(13,0)
+        Curses.addstr ("-"*61)
+        6.times do |i|
+            Curses.setpos(14+i,18)
+            Curses.addstr("|")
+        end
+        Curses.setpos(15,19)
+        Curses.addstr ("-"*42)
     end
 end

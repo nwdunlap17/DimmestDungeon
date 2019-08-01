@@ -51,6 +51,7 @@ class Adventurer < ActiveRecord::Base
             hero.random_stat_up
         end
         hero.get_ready_for_combat
+        hero.save
         return hero
     end
 
