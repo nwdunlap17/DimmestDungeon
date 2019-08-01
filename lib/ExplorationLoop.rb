@@ -12,7 +12,7 @@ class ExplorationLoop
         choices << "Exit Dungeon"
         display
         room = Menu.start(choices,fork_instance.rooms_in_fork,10,0)
-        if room = "Exit Dungeon"
+        if room == "Exit Dungeon"
             @depth = 0
             Tavern.new(@party)
         end
