@@ -3,6 +3,7 @@ class Tavern
     def initialize(party_instance,text_log)
         @carousel = []
         @party = party_instance
+        @text_log = text_log
         fill_carousel
         tavernLoop
     end
@@ -49,6 +50,7 @@ class Tavern
                 @party.heroes_array << hero_instance 
                 @carousel.delete(hero_instance)
             else 
+            end
                 @text_log.write("Your party is full!")
             when "Refresh"
                 refresh_carousel

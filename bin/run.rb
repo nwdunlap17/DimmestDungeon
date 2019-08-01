@@ -6,10 +6,11 @@ require_relative('environment.rb')
 
 
 # Kernel.srand(1)
-party1 = Party.new
-party1.heroes_array.pop
-party1.money = 100
-Tavern.new(party1)
+# party1 = Party.new
+# party1.heroes_array.pop
+# party1.money = 100
+# text_log = Text_log.new
+# Tavern.new(party1,text_log)
 
 # monsters_position = []
 # monsters_position << Monster.new_boss_monster
