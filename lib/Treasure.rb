@@ -13,7 +13,7 @@ class Treasure < ActiveRecord::Base
         Treasure.defineMoney("Large Treasure Chest",500)
         Treasure.defineMoney("Portrait",100)
         Treasure.defineMoney("Giant Diamond",1000)
-        Treasure.defineMoney("The Biggest Diamond",5000)
+        Treasure.defineMoney("Massive Diamond",5000)
     end
 
     def self.defineMagicItem(name,max_HP,max_MP,atk,defense)
@@ -39,7 +39,7 @@ class Treasure < ActiveRecord::Base
             descriptors << " DEF +#{defense}"
         end
         description = descriptors.join(',')
-        description = description.chomp
+        description = description.strip
         treas.description = description
         treas.save
     end
@@ -61,7 +61,7 @@ class Treasure < ActiveRecord::Base
     end
 
     def self.GivePartyTreasure(party, rarity_bonus,text_log)
-        rarity_roll = rand(100) + rarity_bonus
+        rarity_roll = rand(100) + rarity_bonus + 100
 
         if rarity_roll <75 
             rarityvalue = "common"
@@ -74,6 +74,7 @@ class Treasure < ActiveRecord::Base
         given_treasure = treasures.sample
         case given_treasure.treasure_type
         when "Magic Item"
+            give_magic_item_to_party(party,given_treasure,text_log)
         when "Money"
             give_money_to_party(party,given_treasure,text_log)
         when "Potion"
@@ -84,37 +85,38 @@ class Treasure < ActiveRecord::Base
         value_mod = 100 + rand(41) - 20
         value_mod = value_mod /100.0
         total_worth = given_treasure.value * value_mod
+        total_worth = total_worth.round
         party.money += total_worth
         text_log.write("You found a #{given_treasure.name}!")
         text_log.write("It's worth #{total_worth} coins.")
     end
     def self.give_magic_item_to_party(party,given_treasure,text_log)
         self.display(party,given_treasure)
-        heros = party.heroes_position
+        heros = party.heroes_array
         choices = []
         heros.length.times do 
             choices << ""
         end
-        selection = Menu.start(choices,heros,7,10)
+        selection = Menu.start(choices,heros,7,7)
         selection.max_HP += given_treasure.max_HP
-        selection.current_HP += given_treasure.current_HP
+        selection.current_HP += given_treasure.max_HP
         selection.max_MP += given_treasure.max_MP
-        selection.current_MP += given_treasure.current_MP
+        selection.current_MP += given_treasure.max_MP
         selection.atk += given_treasure.attack
         selection.defense += given_treasure.defense
         Ownership.create(adventurer_id: selection.id, treasure_id: given_treasure.id)
     end
     def self.display(party,given_treasure)
         Curses.clear
-        Curses.setpos(4,20)
-        Curses.addstr ("You found a #{given_treasure.name}")
+        Curses.setpos(2,20)
+        Curses.addstr ("You found a #{given_treasure.name}!")
+        Curses.setpos(3,20)
+        Curses.addstr ("(#{given_treasure.description})")
         Curses.setpos(5,20)
-        Curses.addstr ("#{given_treasure.description}")
-        Curses.setpos(6,20)
         Curses.addstr ("Who gets it?")
         
         self.display_menu_outline
-        self.display_characters(party.heroes_position)
+        self.display_characters(party.heroes_array)
         Curses.refresh
     end
     def self.display_characters(input)

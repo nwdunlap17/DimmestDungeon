@@ -11,7 +11,7 @@
 		Hero3 attacks Monster2 for 3 damage!
 		Hero3 attacks Monster2 for 3 damage!
 		Hero3 attacks Monster2 for 3 damage!
-0123456789012345678901234567890-------------------------------   13
+0123456789012345678901234567890123456789012345678901234567890-------------------------------   13
      Attack       |  A skilly skill
  --> Invisibility |-------------------------
      Skill2       | Hero1  HP 12/12 MP 12/12	
