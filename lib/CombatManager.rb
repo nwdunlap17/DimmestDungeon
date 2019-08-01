@@ -54,9 +54,16 @@ class CombatManager
             self.check_for_dead
         end
         if heroes_alive == false
-            #end game method
-        elsif monsters_alive == false
-            #YEET we won
+            counter = 5
+            5.times do
+                    Curses.clear
+                Curses.setpos(10,10)
+                Curses.addstr"Your party has died. GAME OVER. Game will automatically exit in 5 seconds. Game terminating in #{counter}."
+                Curses.refresh
+                counter -= 1
+                sleep(1)
+            end
+            exit
         end
     end
 

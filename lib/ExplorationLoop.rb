@@ -39,8 +39,10 @@ class ExplorationLoop
         Curses.clear
         @party.standard_menu_display
         @text_log.display_text
-        Curses.setpos(0,53)
+        Curses.setpos(0,76)
         Curses.addstr "Depth: #{@depth}"
+        Curses.setpos(1,76)
+        Curses.addstr "Coins: #{@party.money}"
         Curses.refresh
     end
 end
