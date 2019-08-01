@@ -12,8 +12,8 @@ class Tavern
         still_in_town = true
         while still_in_town
             display
-            choices = ["Hire Member","View Party","To Dungeon","Quit Game"]
-            input = Menu.start(choices,choices,Curses.lines-6,1)
+            choices = ["Hire Member","View Party","To Dungeon","Buy Drinks!","Quit Game"]
+            input = Menu.start(choices,choices,Curses.lines-6,1,["After a few ales, anyone almost would join your party.","Take a look at the sorry lot you've gathered.","Nobody will find loot laying around all day.", "Nothing like a good brew to warm your bellies! (Heals all)","Done for the day?"])
             case input
             when "Hire Member"
                 if @party.heroes_array.length < 4
@@ -24,6 +24,12 @@ class Tavern
             when "View Party"
                 display(input)
                 dismiss_member_loop
+            when "Buy Drinks!"
+                @text_log.write("A few hearty drinks and your wounds and spirits are recovered!")
+                @party.heroes_array.each do |party_member|
+                    party_member.current_HP = party_member.max_HP
+                    party_member.current_MP = party_member.max_MP
+                end
             when "To Dungeon"
                 if @party.heroes_array.length >= 1
                     still_in_town = false
@@ -40,7 +46,7 @@ class Tavern
         not_done = true
         while not_done == true
             display("Hire Member")
-            input = Menu.start(["Recruit","Refresh","Back"],["Recruit","Refresh","Back"],Curses.lines-6,1)
+            input = Menu.start(["Recruit","Refresh","Back"],["Recruit","Refresh","Back"],Curses.lines-6,1,[])
             case input
             when "Recruit"
                 if @party.heroes_array.length < 4 && @party.money >= 10
