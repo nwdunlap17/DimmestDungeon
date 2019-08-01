@@ -5,7 +5,7 @@ class Menu
     # Takes in starting y and x positions for upper left corner of menu
 
     def Menu.start(choices, values, y = Curses.lines-5, x = 0,descriptions = [],line_multiplier=1)
-        menu = Menu.new(choices, values, y, x,descriptions)
+        menu = Menu.new(choices, values, y, x,descriptions, line_multiplier)
         return menu.menu_loop
     end
 
@@ -25,7 +25,7 @@ class Menu
         choice = nil
         while !!!choice
             display
-            input = Curses.getch
+            input = Curses.getch.downcase
             case input
             when "s"#Curses::Key::DOWN
                 @index += 1
@@ -46,10 +46,10 @@ class Menu
 
     def display
         @num_choices.times do |i|
-            Curses.setpos(@y+i*@line_multiplier,@x)
+            Curses.setpos(@y+(i*@line_multiplier),@x)
             Curses.addstr("    #{@choices[i]}")
         end
-        Curses.setpos(@y+@index*@line_multiplier,@x)
+        Curses.setpos(@y+(@index*@line_multiplier),@x)
         Curses.addstr("-->")
         if @descriptions != []
             Curses.setpos(Curses.lines-6,20)

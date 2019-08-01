@@ -111,8 +111,10 @@ class Adventurer < ActiveRecord::Base
             self.defense += 1
         when 2
             self.max_HP += 5
+            self.current_HP += 5
         when 3
             self.max_MP += 2
+            self.current_MP +=2
         end
     end
 end

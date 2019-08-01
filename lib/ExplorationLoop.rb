@@ -9,6 +9,9 @@ class ExplorationLoop
 
     def select_room
         while true
+            if @depth == 1
+                @text_log.write("You enter the dungeon...")
+            end
             fork_instance = Fork.new(@depth)
             choice_names = fork_instance.room_labels 
             values = fork_instance.rooms_in_fork
@@ -35,6 +38,7 @@ class ExplorationLoop
     def display()
         Curses.clear
         @party.standard_menu_display
+        @text_log.display_text
         Curses.setpos(0,76)
         Curses.addstr "Depth: #{@depth}"
         Curses.setpos(1,76)

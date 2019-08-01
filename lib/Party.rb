@@ -2,7 +2,7 @@ class Party
     attr_accessor :heroes_array
     attr_accessor :money, :potions, :elixers, :hipotions, :hielixers
     def initialize
-        @money = 0
+        @money = 1000
         @potions = 0
         @elixers = 0
         @hipotions = 0

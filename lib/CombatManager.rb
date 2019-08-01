@@ -80,6 +80,12 @@ class CombatManager
             names_of_choices << action.action_name
             description_of_choices << action.description
         end
+        choices.length.times do |index|
+            if adventurer.current_MP < choices[index].mp_cost
+                choices[index] = nil
+                description_of_choices[index] += " NOT ENOUGH MP"
+            end
+        end
         return Menu.start(names_of_choices,choices,Curses.lines-6,1,description_of_choices)
     end
 
@@ -120,28 +126,18 @@ class CombatManager
     end
 
     def change_aggro(character,change_value)
-        #change_value can be a positive or negative number
-        #character = object, change_value = integer
-        new_heroes = []
-        if change_value > 0
-            change_value.times do 
+        binding.pry
+        new_aggro = @heroes_aggro.count(character)
+        if (new_aggro + change_value) > 0
+            new_aggro = new_aggro + change_value
+            @heroes_aggro.delete(character)
+            new_aggro.times do
                 @heroes_aggro << character
             end
-        elsif change_value < 0
-            if @heroes_aggro.count(character) > change_value.abs
-                counter = change_value.abs
-                while counter != 0
-                    @heroes_aggro = @heroes_aggro.map do |hero|
-                        if hero == character 
-                            hero = nil
-                            counter -= 1
-                        else
-                            hero
-                        end
-                    end.compact
-                end
-            end
+        else
+            @textlog.write("#{character.name} is already as hidden as possible!")
         end
+        binding.pry
     end
 
     def apply_damage(damaged_object,damage_dealt)
@@ -187,6 +183,9 @@ class CombatManager
     # defenders and allied_targets are arrays of Combatants
     def execute_action(actor,action,damage_targets,buff_targets)
         @textlog.write("#{actor.name} used #{action.action_name}.")
+        if action.mp_cost > 0
+            actor.current_MP -= action.mp_cost
+        end
         damage_targets.each do |target|
             deal_damage(actor,target,action)
         end
