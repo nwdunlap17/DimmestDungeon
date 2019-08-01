@@ -23,6 +23,7 @@ class Tavern
                 end
             when "View Party"
                 display(input)
+                dismiss_member_loop
             when "To Dungeon"
                 #exploration loop
                 still_in_town = false
@@ -44,7 +45,7 @@ class Tavern
                     arr << ""
                 end
                 hero_instance = Menu.start(arr,@carousel,1,0,[],3)
-                @party << hero_instance 
+                @party.heroes_array << hero_instance 
                 @carousel.delete(hero_instance)
             when "Refresh"
                 refresh_carousel
@@ -54,6 +55,24 @@ class Tavern
         end
     end
 
+    def dismiss_member_loop
+        not_done = true
+        while not_done == true
+            display("View Party")
+            input = Menu.start(["Dismiss","Back"],["Dismiss","Back"],Curses.lines-6,1)
+            case input
+            when "Dismiss"
+                arr =[]
+                @party.heroes_array.length.times do
+                    arr << ""
+                end
+                hero_instance = Menu.start(arr,@party.heroes_array,1,0,[],3)
+                @party.heroes_array.delete(hero_instance)
+            when "Back"
+                not_done = false
+            end
+        end
+    end
 
     def display(string="")
         Curses.clear
@@ -62,10 +81,9 @@ class Tavern
         when "Hire Member"
             display_adventurers(@carousel)
         when "View Party"
-            display_adventurers(@party)
+            display_adventurers(@party.heroes_array)
         when ""
         end
-
         Curses.refresh
     end
 
