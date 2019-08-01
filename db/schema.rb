@@ -14,6 +14,7 @@ ActiveRecord::Schema.define(version: 2019_08_01_163332) do
 
   create_table "actions", force: :cascade do |t|
     t.text "action_name"
+    t.decimal "mp_restore"
     t.text "description"
     t.text "selection_type"
     t.boolean "target_self"
@@ -66,6 +67,8 @@ ActiveRecord::Schema.define(version: 2019_08_01_163332) do
     t.text "rarity"
     t.text "treasure_type"
     t.integer "value"
+    t.integer "potions"
+    t.integer "elixers"
   end
 
 end

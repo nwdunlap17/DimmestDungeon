@@ -3,10 +3,8 @@ class Party
     attr_accessor :money, :potions, :elixers, :hipotions, :hielixers
     def initialize
         @money = 1000
-        @potions = 0
-        @elixers = 0
-        @hipotions = 0
-        @hielixers = 0
+        @potions = 2
+        @elixers = 2
         @heroes_array = []
         4.times do 
             @heroes_array << Adventurer.generate_new_adventurer_with_job
@@ -28,6 +26,8 @@ class Party
     def standard_menu_display
         display_adventurers
         display_menu_outline
+        Curses.setpos(1,76)
+        Curses.add "Coins #{@money}"
     end
 
     

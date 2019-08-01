@@ -39,17 +39,21 @@ class CombatManager
             character_picked = battle_array.sample
     
             display(character_picked)
-            if heroes_position.include?(character_picked)
-                chosen_action = choose_action_for_character(character_picked)
-                # binding.pry
-                select_target(character_picked, chosen_action,monsters_position,heroes_position)
-                #select_target(character_picked,Action.basic_attack,monsters_position,heroes_position)
+            if character_picked.stunned && (rand(2) == 0)
+                character_picked.stunned = false
+                @textlog.write("#{character_picked.name} was too stunned to move!")
             else
-                #monster
-                monsters_target = @heroes_aggro.sample
-                execute_action(character_picked,Action.basic_attack,[monsters_target],[])
+                if heroes_position.include?(character_picked)
+                    chosen_action = choose_action_for_character(character_picked)
+                    # binding.pry
+                    select_target(character_picked, chosen_action,monsters_position,heroes_position)
+                    #select_target(character_picked,Action.basic_attack,monsters_position,heroes_position)
+                else
+                    #monster
+                    monsters_target = @heroes_aggro.sample
+                    execute_action(character_picked,Action.basic_attack,[monsters_target],[])
+                end
             end
-
             battle_array.delete(character_picked)
             self.check_for_dead
         end
@@ -76,6 +80,12 @@ class CombatManager
         names_of_choices = []
         description_of_choices = []
         #binding.pry
+        if @party.potions > 0
+            choices << Action.use_potion
+        end
+        if @party.elixers > 0
+            choices << Action.use_elixer
+        end
         choices.each do |action|
             names_of_choices << action.action_name
             description_of_choices << action.description
@@ -84,6 +94,11 @@ class CombatManager
             if adventurer.current_MP < choices[index].mp_cost
                 choices[index] = nil
                 description_of_choices[index] += " NOT ENOUGH MP"
+            end
+            if choices[index].action_name == "Potion"
+                description_of_choices[index] += "#{@party.potions}."
+            elsif choices[index].action_name == "Elixer"
+                description_of_choices[index] += "#{@party.elixers}."
             end
         end
         return Menu.start(names_of_choices,choices,Curses.lines-6,1,description_of_choices)
@@ -96,6 +111,10 @@ class CombatManager
         @monsters_position.length.times do  |index|
             Curses.setpos(index,9)
             Curses.addstr " #{monsters_position[index].name} HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP}"
+            if @monsters_position[index].stunned
+                Curses.setpos(index,9)
+                Curses.addstr "@"
+            end
         end
         @textlog.display_text
         Curses.refresh
@@ -126,7 +145,6 @@ class CombatManager
     end
 
     def change_aggro(character,change_value)
-        binding.pry
         new_aggro = @heroes_aggro.count(character)
         if (new_aggro + change_value) > 0
             new_aggro = new_aggro + change_value
@@ -137,7 +155,6 @@ class CombatManager
         else
             @textlog.write("#{character.name} is already as hidden as possible!")
         end
-        binding.pry
     end
 
     def apply_damage(damaged_object,damage_dealt)
@@ -151,6 +168,7 @@ class CombatManager
     def check_for_dead
         self.heroes_position.each do |hero|
             if hero.alive? == false
+                @textlog.write("#{hero.name} has died.")
                 heroes_position.delete(hero)
                 heroes_aggro.delete(hero)
                 if heroes_position.empty? == true
@@ -162,6 +180,7 @@ class CombatManager
         index = 0
         while index < self.monsters_position.length
             if monsters_position[index].alive? == false
+                @textlog.write("#{monsters_position[length].name} has been defeated.")
                 monsters_position.delete_at(index)
                 index = 0
                 if monsters_position.empty? == true
@@ -186,8 +205,19 @@ class CombatManager
         if action.mp_cost > 0
             actor.current_MP -= action.mp_cost
         end
+        if action.action_name == "Potion"
+            @party.potions -= 1
+        elsif action.action_name == "Elixer"
+            @party.elixers -= 1
+        end
         damage_targets.each do |target|
             deal_damage(actor,target,action)
+            if action.stun_chance > 0
+                if rand(10) < (action.stun_chance*10)
+                    target.stunned = true
+                    @textlog.write("#{target.name} is dizzy!")
+                end
+            end
         end
         buff_targets.each do |target|
             apply_buff(target,action)
@@ -214,9 +244,15 @@ class CombatManager
     target.def_multi += action.def_buff
     heal_amount = (target.max_HP * action.heal_value).round
     target.current_HP += heal_amount
+    restore_amount = (target.max_MP * action.mp_restore).round
+    target.current_MP += restore_amount
     if target.current_HP > target.max_HP
         heal_amount -= (target.current_HP - target.max_HP)
         target.current_HP = target.max_HP
+    end
+    if target.current_MP > target.max_MP
+        restore_amount -= (target.current_MP - target.max_MP)
+        target.current_MP = target.max_MP
     end
     if action.atk_buff > 0
         @textlog.write("#{target.name}'s ATK has improved.")
@@ -226,6 +262,9 @@ class CombatManager
     end
     if heal_amount > 0
         @textlog.write("#{target.name} has healed #{heal_amount} HP.")
+    end
+    if restore_amount > 0
+        @textlog.write("#{target.name} has restored #{restore_amount} MP.")
     end
  end
 

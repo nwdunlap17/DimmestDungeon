@@ -55,6 +55,10 @@ class Room
             monsters_position << Monster.new_monster
         end
         CombatManager.new(party_instance,monsters_position,text_log)
+        if rand(3) == 0
+            text_log.write("You find treasure!")
+            Treasure.GivePartyTreasure(party_instance,@dungeon_depth+10,text_log)
+        end
     end
 
     def safe_room

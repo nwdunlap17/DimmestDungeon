@@ -9,11 +9,13 @@ class Tavern
     end
 
     def tavernLoop
+        tavern_quotes = ["Your party stumbles into the Tavern after a hard day of work.","The tavern keep greets you all with a somber grimace."]
+        @text_log.write(tavern_quotes.sample)
         still_in_town = true
         while still_in_town
             display
-            choices = ["Hire Member","View Party","To Dungeon","Buy Drinks!","Quit Game"]
-            input = Menu.start(choices,choices,Curses.lines-6,1,["After a few ales, anyone almost would join your party.","Take a look at the sorry lot you've gathered.","Nobody will find loot laying around all day.", "Nothing like a good brew to warm your bellies! (Heals all)","Done for the day?"])
+            choices = ["Hire Member","View Party","To Dungeon","Heal Party!","Quit Game"]
+            input = Menu.start(choices,choices,Curses.lines-6,1,["After a few ales, anyone almost would join your party.","Take a look at the sorry lot you've gathered.","Nobody will find loot laying around all day.", "Nothing like a good brew to warm your bellies!","Done for the day?"])
             case input
             when "Hire Member"
                 if @party.heroes_array.length < 4
