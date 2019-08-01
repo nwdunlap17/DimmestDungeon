@@ -1,21 +1,26 @@
 class Tavern
     attr_accessor :carousel
-    def initialize(party)
+    def initialize(party_instance)
         @carousel = []
-        @party = party
-        TavernLoop
+        @party = party_instance
+        fill_carousel
+        tavernLoop
     end
 
-    def TavernLoop
+    def tavernLoop
         still_in_town = true
 
         while still_in_town
             display
-            choices = ["Recruit Member","View Party","To Dungeon","Quit Game"]
-            input = Menu.start(choices,choices,14,1)
+            choices = ["Hire Member","View Party","To Dungeon","Quit Game"]
+            input = Menu.start(choices,choices,Curses.lines-6,1)
             case input
-            when "Recruit Member"
-                display(input)
+            when "Hire Member"
+                if @party.heroes_array.length < 4
+                    recruit_member_loop
+                else 
+                    @text_log.write("Your party is full!")
+                end
             when "View Party"
                 display(input)
             when "To Dungeon"
@@ -27,15 +32,37 @@ class Tavern
         end
     end
 
+    def recruit_member_loop
+        not_done = true
+        while not_done == true
+            display("Hire Member")
+            input = Menu.start(["Recruit","Refresh","Back"],["Recruit","Refresh","Back"],Curses.lines-6,1)
+            case input
+            when "Recruit"
+                arr =[]
+                @carousel.length.times do
+                    arr << ""
+                end
+                hero_instance = Menu.start(arr,@carousel,1,0,[],3)
+                @party << hero_instance 
+                @carousel.delete(hero_instance)
+            when "Refresh"
+                refresh_carousel
+            when "Back"
+                not_done = false
+            end
+        end
+    end
+
+
     def display(string="")
         Curses.clear
-        display_menu_outline
-        display_adventurers
+        @party.standard_menu_display
         case string
-        when "Recruit Member"
-            @carousel
+        when "Hire Member"
+            display_adventurers(@carousel)
         when "View Party"
-            @party.heroes_position
+            display_adventurers(@party)
         when ""
         end
 
@@ -57,49 +84,40 @@ class Tavern
             Curses.addstr"DEF: #{input[index].defense}"
         end
     end
-    
-    def display_menu_outline
-        Curses.setpos(13,0)
-        Curses.addstr ("-"*61)
-        6.times do |i|
-            Curses.setpos(14+i,18)
-            Curses.addstr("|")
-        end
-        Curses.setpos(15,19)
-        Curses.addstr ("-"*42)
-    end
 
-    def recruit_member
-        if party.heroes_array.length < 4
-            Menu.new([])
-        else 
-            @text_log.write("Your party is full!")
-        end
-    end
-
-    def display_adventurers
-        start_display_line = 16
-        @party.heroes_position.length.times do  |index|
-            Curses.setpos(start_display_line+index,20)
-            Curses.addstr " #{heroes_position[index].name}"
-            Curses.setpos(start_display_line+index,36)
-            Curses.addstr"HP: #{heroes_position[index].current_HP} / #{heroes_position[index].max_HP}"
-            Curses.setpos(start_display_line+index,50)
-            Curses.addstr"MP: #{heroes_position[index].current_MP} / #{heroes_position[index].max_MP}"
+    def display_adventurers(array)
+        start_display_line = 1
+        array.length.times do  |counter|
+            Curses.setpos(start_display_line+counter*3,5)
+            Curses.addstr " #{array[counter].name}"
+            Curses.setpos(start_display_line+counter*3,17) 
+            Curses.addstr " #{array[counter].job}"
+            Curses.setpos(start_display_line+counter*3,27)
+            Curses.addstr"HP: #{array[counter].current_HP} / #{array[counter].max_HP}"
+            Curses.setpos(start_display_line+counter*3,41)
+            Curses.addstr"MP: #{array[counter].current_MP} / #{array[counter].max_MP}"
+            Curses.setpos(start_display_line+counter*3,55)
+            Curses.addstr"ATK: #{array[counter].atk}"
+            Curses.setpos(start_display_line+counter*3,64)
+            Curses.addstr"DEF: #{array[counter].defense}"
+            Curses.setpos(start_display_line+counter*3+1,10)
+            Curses.addstr"#{array[counter].skill1.action_name}: #{array[counter].skill1.description}"
+            Curses.setpos(start_display_line+counter*3+2,10)
+            Curses.addstr"#{array[counter].skill2.action_name}: #{array[counter].skill2.description}"
         end
     end
 
-    def display_carousel
+    def fill_carousel
         4.times do 
            @carousel <<  Adventurer.generate_new_adventurer_with_job
         end
     end
 
-    def refresh_carousel(party_instance)
-        if party_instance.money >= 5
-            party_instance.money = party_instance.money - 5
+    def refresh_carousel
+        if  @party.money >= 5
+            @party.money = @party.money - 5
             @carousel = []
-            display_carousel
+            fill_carousel
         end
     end
         
