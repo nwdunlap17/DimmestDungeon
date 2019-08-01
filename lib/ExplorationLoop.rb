@@ -1,5 +1,5 @@
 class ExplorationLoop
-    attr_accessor :depth :text_log
+    attr_accessor :depth, :text_log
     def initialize
         @text_log = Text_Log.new
         @depth = 0
@@ -9,7 +9,7 @@ class ExplorationLoop
         choices = fork_instance.room_numbers 
         choices << "Leave"
         room = Menu.start(choices,fork_instance.rooms_in_fork,10,0)
-        if room = "Leave"
+        if room == "Leave"
             @depth = 0
             #start TavernLoop
         end

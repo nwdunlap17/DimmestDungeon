@@ -40,7 +40,7 @@ class Fork
         Curses.setpos(y,x)
         door_string.length.times do |counter|
             Curses.addstr(door_string[counter])
-            Curses.setpos(y+counter)(x)
+            Curses.setpos(y+counter,x)
         end
         Curses.refresh
     end       

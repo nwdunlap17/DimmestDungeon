@@ -4,12 +4,12 @@ class Menu
     # When a choice is made, the corresponding value is returned
     # Takes in starting y and x positions for upper left corner of menu
 
-    def Menu.start(choices, values, y = 15, x = 0)
-        menu = Menu.new(choices, values, y, x)
+    def Menu.start(choices, values, y = 15, x = 0,descriptions = [])
+        menu = Menu.new(choices, values, y, x,descriptions)
         return menu.menu_loop
     end
 
-    def initialize(choices, values, y = 15, x = 0)
+    def initialize(choices, values, y = 15, x = 0, descriptions = [])
         @choices = choices
         @values = values
         @y = y
@@ -17,6 +17,7 @@ class Menu
         @index = 0
         @done = false
         @num_choices = choices.length
+        @descriptions = descriptions
     end
 
     def menu_loop
@@ -47,10 +48,14 @@ class Menu
             Curses.setpos(@y+i,@x)
             Curses.addstr("    #{@choices[i]}")
         end
-
         Curses.setpos(@y+@index,@x)
         Curses.addstr("-->")
-
+        if @descriptions != []
+            Curses.setpos(14,20)
+            Curses.addstr " "*60
+            Curses.setpos(14,20)
+            Curses.addstr @descriptions[@index]
+        end
         Curses.refresh
     end
 end

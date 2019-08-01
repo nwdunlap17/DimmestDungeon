@@ -16,9 +16,11 @@ class CombatManager
     end
 
     def battle_sequence
+        @monsters_position.each do |monster|
+            @textlog.write("A #{monster.name} appeared!")
+        end
         battle_array = []
         while @combat_is_over == false
-
             #Refresh initiative order
             if battle_array.empty? == true
                 battle_array = []
@@ -64,11 +66,13 @@ class CombatManager
         choices << adventurer.skill1
         choices << adventurer.skill2
         names_of_choices = []
+        description_of_choices = []
         #binding.pry
         choices.each do |action|
             names_of_choices << action.action_name
+            description_of_choices << action.description
         end
-        return Menu.start(names_of_choices,choices,14,1)
+        return Menu.start(names_of_choices,choices,14,1,description_of_choices)
     end
 
     def display(character_picked)
@@ -79,6 +83,7 @@ class CombatManager
             Curses.addstr " #{monsters_position[index].name} HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP} \n"
         end
         display_adventurers(character_picked)
+        @textlog.display_text
         Curses.refresh
     end
     
@@ -103,9 +108,6 @@ class CombatManager
             Curses.addstr"HP: #{heroes_position[index].current_HP} / #{heroes_position[index].max_HP}"
             Curses.setpos(start_display_line+index,50)
             Curses.addstr"MP: #{heroes_position[index].current_MP} / #{heroes_position[index].max_MP}"
-
-
-
 
             if character_picked == @heroes_position[index]
                 Curses.setpos(start_display_line+index,19)
@@ -191,7 +193,7 @@ class CombatManager
     # action is used Action
     # defenders and allied_targets are arrays of Combatants
     def execute_action(actor,action,damage_targets,buff_targets)
-        @textlog.write("#{actor} used #{action.action_name}.")
+        @textlog.write("#{actor.name} used #{action.action_name}.")
         damage_targets.each do |target|
             deal_damage(actor,target,action)
         end
@@ -212,20 +214,35 @@ class CombatManager
         damage_dealt = 1
     end
     defender.current_HP -= damage_dealt
+    @textlog.write("#{defender.name} took #{damage_dealt} damage!")
  end
 
  def apply_buff(target, action)
     target.atk_multi += action.atk_buff
     target.def_multi += action.def_buff
-    target.current_HP += target.max_HP * action.heal_value
-    target.current_HP = target.current_HP.round
+    heal_amount = (target.max_HP * action.heal_value).round
+    target.current_HP += heal_amount
     if target.current_HP > target.max_HP
+        heal_amount -= (target.current_HP - target.max_HP)
         target.current_HP = target.max_HP
+    end
+    if action.atk_buff > 0
+        @textlog.write("#{target.name}'s ATK has improved.")
+    end
+    if action.def_buff > 0
+        @textlog.write("#{target.name}'s DEF has improved.")
+    end
+    if heal_amount > 0
+        @textlog.write("#{target.name} has healed #{heal_amount} HP.")
     end
  end
 
  def select_target(actor, action, enemy_array, ally_array)
     enemy_targets = []
+    enemy_descriptions = []
+    enemy_array.each do |monster|
+        enemy_descriptions << monster.description
+    end
     ally_targets = []
     if action.target_self
         ally_targets << actor
@@ -238,7 +255,7 @@ class CombatManager
         ally_targets = ally_array
     when "1 Enemy"
         enemy_names = enemy_array.map {|foe| foe.name}
-        enemy_targets << Menu.start(enemy_names,enemy_array,0,6)
+        enemy_targets << Menu.start(enemy_names,enemy_array,0,6,enemy_descriptions)
     when "1 Ally"
         ally_names = ally_array.map {|ally| ally.name}
         ally_targets << Menu.start(ally_names,ally_array,9,0)
