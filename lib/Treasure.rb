@@ -67,6 +67,7 @@ class Treasure < ActiveRecord::Base
 
     def self.definePotion(name,potquantity,elixerquantity)
         treas = Treasure.new
+        treas.name = name
         treas.treasure_type = "Potion"
         treas.rarity = "uncommon"
         treas.potions = potquantity
