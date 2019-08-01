@@ -13,7 +13,7 @@ class ExplorationLoop
             choice_names = fork_instance.room_labels 
             values = fork_instance.rooms_in_fork
             descriptions = []
-            binding.pry
+            #binding.pry
             fork_instance.rooms_in_fork.each do |room|
                 descriptions << room.description
             end
@@ -24,7 +24,7 @@ class ExplorationLoop
             choice = Menu.start(choice_names,values,Curses.lines-6,0,descriptions)
             if choice == "Leave"
                 @depth = 0
-                Tavern.new(@party)
+                Tavern.new(@party,@text_log)
             end
             choice.door_selection(@party,@text_log)
             @depth += 1
