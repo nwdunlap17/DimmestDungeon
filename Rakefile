@@ -2,10 +2,16 @@ require_relative "bin/environment.rb"
 require "sinatra/activerecord/rake"
 
 
-desc 'starts a console'
+desc 'runs game'
 task :run do
   #ActiveRecord::Base.logger = Logger.new(STDOUT)
   system('ruby bin/run.rb')
+end
+
+desc 'starts a console'
+task :console do
+  ActiveRecord::Base.logger = Logger.new(STDOUT)
+  Pry.start
 end
 
 desc 'loads all tables'

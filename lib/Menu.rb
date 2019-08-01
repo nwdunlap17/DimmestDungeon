@@ -53,7 +53,7 @@ class Menu
         Curses.addstr("-->")
         if @descriptions != []
             Curses.setpos(Curses.lines-6,20)
-            Curses.addstr " "*60
+            Curses.addstr " "*(Curses.cols-20)
             Curses.setpos(Curses.lines-6,20)
             Curses.addstr @descriptions[@index]
         end

@@ -12,8 +12,8 @@ class Fork
     end
 
     def generate_rooms
-        rooms = rand(3)+1
-        if @dungeon_depth % 10 != 0
+        rooms = rand(2)+2
+        if @dungeon_depth % 10 == 0
             @rooms_in_fork << Room.new(@dungeon_depth)
             @room_labels << "Door 1"
         else

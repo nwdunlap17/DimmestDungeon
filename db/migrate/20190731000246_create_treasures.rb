@@ -8,7 +8,7 @@ class CreateTreasures < ActiveRecord::Migration[5.2]
       t.integer :defense
       t.text :description
       t.text :rarity
-      t.text :type
+      t.text :treasure_type
       t.integer :value
     end
   end
