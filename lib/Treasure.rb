@@ -14,6 +14,11 @@ class Treasure < ActiveRecord::Base
         Treasure.defineMoney("Portrait",100)
         Treasure.defineMoney("Giant Diamond",1000)
         Treasure.defineMoney("Massive Diamond",5000)
+        Treasure.definePotion("Potions",2,0)
+        Treasure.definePotion("Elixers",0,2)
+        Treasure.definePotion("ManyPotions",3,0)
+        Treasure.definePotion("ManyElixers",0,3)
+        Treasure.definePotion("PotionsAndElixers",2,2)
     end
 
     def self.defineMagicItem(name,max_HP,max_MP,atk,defense)
@@ -60,9 +65,18 @@ class Treasure < ActiveRecord::Base
         treas.save
     end
 
-    def self.GivePartyTreasure(party, rarity_bonus,text_log)
-        rarity_roll = rand(100) + rarity_bonus + 100
+    def self.definePotion(name,potquantity,elixerquantity)
+        treas = Treasure.new
+        treas.treasure_type = "Potion"
+        treas.rarity = "uncommon"
+        treas.potions = potquantity
+        treas.elixers = elixerquantity
+        treas.save
+    end
 
+    def self.GivePartyTreasure(party, rarity_bonus,text_log)
+        rarity_roll = rand(100) + rarity_bonus
+        rarity_roll = 80
         if rarity_roll <75 
             rarityvalue = "common"
         elsif rarity_roll >= 76 && rarity_roll < 98
@@ -78,6 +92,7 @@ class Treasure < ActiveRecord::Base
         when "Money"
             give_money_to_party(party,given_treasure,text_log)
         when "Potion"
+            give_potion_to_party(party,given_treasure,text_log)
         end
     end
 
@@ -90,6 +105,16 @@ class Treasure < ActiveRecord::Base
         text_log.write("You found a #{given_treasure.name}!")
         text_log.write("It's worth #{total_worth} coins.")
     end
+    def self.give_potion_to_party(party,given_treasure,text_log)
+        if given_treasure.potions > 0
+            text_log.write("You found #{given_treasure.potions} Potions!")
+            party.potions += given_treasure.potions
+        end
+        if given_treasure.elixers > 0
+            text_log.write("You found #{given_treasure.elixers} Elixers!")
+            party.elixers += given_treasure.elixers
+        end
+    end
     def self.give_magic_item_to_party(party,given_treasure,text_log)
         self.display(party,given_treasure)
         heros = party.heroes_array
@@ -97,7 +122,7 @@ class Treasure < ActiveRecord::Base
         heros.length.times do 
             choices << ""
         end
-        selection = Menu.start(choices,heros,7,7)
+        selection = Menu.start(choices,heros,5,16,[],3)
         selection.max_HP += given_treasure.max_HP
         selection.current_HP += given_treasure.max_HP
         selection.max_MP += given_treasure.max_MP
@@ -108,41 +133,37 @@ class Treasure < ActiveRecord::Base
     end
     def self.display(party,given_treasure)
         Curses.clear
-        Curses.setpos(2,20)
-        Curses.addstr ("You found a #{given_treasure.name}!")
-        Curses.setpos(3,20)
-        Curses.addstr ("(#{given_treasure.description})")
-        Curses.setpos(5,20)
+        Curses.setpos(2,25)
+        Curses.addstr ("You found a #{given_treasure.name}! (#{given_treasure.description})")
+        Curses.setpos(3,45)
         Curses.addstr ("Who gets it?")
-        
-        self.display_menu_outline
-        self.display_characters(party.heroes_array)
+        party.standard_menu_display
+        self.display_adventurers(party)
         Curses.refresh
     end
-    def self.display_characters(input)
-        start_display_line = 7
-        input.length.times do  |index|
-            Curses.setpos(start_display_line+index,10)
-            Curses.addstr " #{input[index].name}"
-            Curses.setpos(start_display_line+index,26)
-            Curses.addstr"HP: #{input[index].max_HP}"
-            Curses.setpos(start_display_line+index,34)
-            Curses.addstr"MP: #{input[index].max_MP}"
-            Curses.setpos(start_display_line+index,42)
-            Curses.addstr"ATK: #{input[index].atk}"
-            Curses.setpos(start_display_line+index,51)
-            Curses.addstr"DEF: #{input[index].defense}"
+
+    def self.display_adventurers(party)
+        Curses.setpos(1,76)
+        Curses.addstr"Coins:#{party.money}"
+        start_display_line = 5
+        array = party.heroes_array
+        array.length.times do  |counter|
+            Curses.setpos(start_display_line+counter*3,19)
+            Curses.addstr " #{array[counter].name}"
+            Curses.setpos(start_display_line+counter*3,31) 
+            Curses.addstr " #{array[counter].job}"
+            Curses.setpos(start_display_line+counter*3,41)
+            Curses.addstr"HP: #{array[counter].current_HP} / #{array[counter].max_HP}"
+            Curses.setpos(start_display_line+counter*3,55)
+            Curses.addstr"MP: #{array[counter].current_MP} / #{array[counter].max_MP}"
+            Curses.setpos(start_display_line+counter*3,69)
+            Curses.addstr"ATK: #{array[counter].atk}"
+            Curses.setpos(start_display_line+counter*3,78)
+            Curses.addstr"DEF: #{array[counter].defense}"
+            Curses.setpos(start_display_line+counter*3+1,24)
+            Curses.addstr"#{array[counter].skill1.action_name}: #{array[counter].skill1.description}"
+            Curses.setpos(start_display_line+counter*3+2,24)
+            Curses.addstr"#{array[counter].skill2.action_name}: #{array[counter].skill2.description}"
         end
-    end
-        
-    def self.display_menu_outline
-        Curses.setpos(13,0)
-        Curses.addstr ("-"*61)
-        6.times do |i|
-            Curses.setpos(14+i,18)
-            Curses.addstr("|")
-        end
-        Curses.setpos(15,19)
-        Curses.addstr ("-"*42)
     end
 end

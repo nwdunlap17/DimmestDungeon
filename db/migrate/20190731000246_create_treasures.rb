@@ -10,6 +10,8 @@ class CreateTreasures < ActiveRecord::Migration[5.2]
       t.text :rarity
       t.text :treasure_type
       t.integer :value
+      t.integer :potions
+      t.integer :elixers
     end
   end
 end

@@ -26,7 +26,7 @@ class Text_Log
         end
     end
 
-    def display_text(start_y=12, start_x=19)
+    def display_text(start_y=Curses.lines-8, start_x=19)
         @lines_of_Text.length.times do |i|
             Curses.setpos(start_y - i, start_x)
             if i >= @relevant_lines

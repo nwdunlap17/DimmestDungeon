@@ -25,7 +25,7 @@ require_relative('environment.rb')
 # monsters = [slime,boblin]
 
 # CombatManager.new(party,monsters_position,Text_Log.new)
-
+#Curses.clear
 ExplorationLoop.new
 
 

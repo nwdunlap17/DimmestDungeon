@@ -2,11 +2,9 @@ class Party
     attr_accessor :heroes_array
     attr_accessor :money, :potions, :elixers, :hipotions, :hielixers
     def initialize
-        @money = 1000
-        @potions = 0
-        @elixers = 0
-        @hipotions = 0
-        @hielixers = 0
+        @money = 10
+        @potions = 1
+        @elixers = 1
         @heroes_array = []
         4.times do 
             @heroes_array << Adventurer.generate_new_adventurer_with_job
@@ -21,13 +19,11 @@ class Party
         self.heroes_array.delete(hero_instance)
     end
 
-    def add_party_member
-        
-    end
-
     def standard_menu_display
         display_adventurers
         display_menu_outline
+        Curses.setpos(1,76)
+        Curses.add "Coins #{@money}"
     end
 
     

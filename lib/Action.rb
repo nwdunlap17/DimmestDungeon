@@ -7,6 +7,12 @@ class Action < ActiveRecord::Base
     def Action.basic_attack
         return Action.make_attack("none","Attack",0,false,1,0,"A basic attack.")
     end
+    def Action.use_potion
+        return Action.make_buff("none","Potion",0,"one",0,0,0.5,0,0,"Restores half of max HP. You have ")
+    end
+    def Action.use_elixer
+        return Action.make_buff("none","Elixer",0,"one",0,0,0,0.5,0,"Restores half of max MP. You have ")
+    end
 
     def Action.make_attack(job,name,mp_cost,targets_all,damage_multiplier,stun,description)
         skill = Action.new
@@ -28,7 +34,7 @@ class Action < ActiveRecord::Base
         return skill
     end
 
-    def Action.make_buff(job,name,mp_cost,target,atk,defense,heal,aggro,description)
+    def Action.make_buff(job,name,mp_cost,target,atk,defense,heal,mana,aggro,description)
         skill = Action.new
         skill.job = job
         skill.mp_cost = mp_cost
@@ -48,6 +54,7 @@ class Action < ActiveRecord::Base
         skill.atk_buff = atk
         skill.def_buff = defense
         skill.heal_value = heal
+        skill.mp_restore = mana
         skill.description = description
         skill.aggro_change = aggro
         return skill
@@ -66,6 +73,7 @@ class Action < ActiveRecord::Base
         skill.damage_multiplier = damage_multiplier
         skill.stun_chance = stun
         skill.atk_buff = atk
+        skill.mp_restore = 0
         skill.def_buff = defense
         skill.heal_value = heal
         skill.aggro_change = aggro
@@ -81,33 +89,33 @@ class Action < ActiveRecord::Base
         skill.save
         skill = Action.make_attack("Mage","Death",2,false,4,0,"A powerful attack")
         skill.save
-        skill = Action.make_attack("Mage","Flash",2,false,0,0.4,"May stun multiple enemies")
+        skill = Action.make_attack("Mage","Flash",2,true,0,0.4,"May stun multiple enemies")
         skill.save
-        skill = Action.make_buff("Mage","Vanish",2,"self",0,0,0,-1,"Makes the mage less likely to be hit")
+        skill = Action.make_buff("Mage","Vanish",2,"self",0,0,0,0,-1,"Makes the mage less likely to be hit")
         skill.save
-        skill = Action.make_buff("Mage","Shield",2,"self",0,1,0,0,"Significantly raises own DEF")
+        skill = Action.make_buff("Mage","Shield",2,"self",0,1,0,0,0,"Significantly raises own DEF")
         skill.save
 
         skill = Action.make_attack("Fighter","Strike",2,false,3,0,"A powerful attack")
         skill.save
         skill = Action.make_attack("Fighter","Wallop",2,false,1,0.8,"An attack that stuns the target")
         skill.save
-        skill = Action.make_buff("Fighter","Bulk Up",2,"self",0.5,0.5,0,0,"Raises ATK and DEF")
+        skill = Action.make_buff("Fighter","Bulk Up",2,"self",0.5,0.5,0,0,0,"Raises ATK and DEF")
         skill.save
-        skill = Action.make_buff("Fighter","Taunt",2,"self",0,0,0,2,"Makes yourself more likely to be hit")
+        skill = Action.make_buff("Fighter","Taunt",2,"self",0,0,0,0,2,"Makes yourself more likely to be hit")
         skill.save
         skill = Action.make_buffing_attack("Fighter","Rally",2,1,0,0,0,0.2,0,"An attack that heals the user.")
         skill.save
         skill = Action.make_buffing_attack("Fighter","Charge!",2,1.5,0,0.5,0,0,0,"A strong attack that raises ATK.")
         skill.save
 
-        skill = Action.make_buff("Cleric","Protect",2,"all",0,0.5,0,0,"Raises everyone's DEF.")
+        skill = Action.make_buff("Cleric","Protect",2,"all",0,0.5,0,0,0,"Raises everyone's DEF.")
         skill.save
-        skill = Action.make_buff("Cleric","Heal",2,"one",0,0,0.6,0,"Heals one target.")
+        skill = Action.make_buff("Cleric","Heal",2,"one",0,0,0.6,0,0,"Heals one target.")
         skill.save
-        skill = Action.make_buff("Cleric","Bless",2,"all",0.5,0,0,0,"Raises everyone's ATK.")
+        skill = Action.make_buff("Cleric","Bless",2,"all",0.5,0,0,0,0,"Raises everyone's ATK.")
         skill.save
-        skill = Action.make_buff("Cleric","Mass Heal",2,"all",0,0,0.2,0,"Heals whole party.")
+        skill = Action.make_buff("Cleric","Mass Heal",2,"all",0,0,0.2,0,0,"Heals whole party.")
         skill.save
         skill = Action.make_buffing_attack("Cleric","Smite",2,2,0,0,0,0.2,0,"A strong attack that heals the user.")
         skill.save
