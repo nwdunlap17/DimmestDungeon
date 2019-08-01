@@ -1,13 +1,14 @@
 class Room
 # another method will call on the rooms
 # rooms need to know what kind of room it is
-attr_writer :description, :door_appearance
+    attr_accessor :description, :door_appearance
+    
     def initialize(depth)
     @dungeon_depth = depth
-    @type = set_type
+    @room_type = ""
+    set_type
     @description = ""
     @door_appearance = ""
-    @room_type = ""
     end
 
     def set_type
@@ -42,7 +43,7 @@ attr_writer :description, :door_appearance
     def monster_room
         @door_appearance = "wooden_door"
         descriptors = ["imposing","monstrous","ominous","dreadful","gloomy","ghastly","horrid","hideous","macabre","unpleasant","terrifying","repulsive","revolting","distasteful","sanguine"]
-        door_description = "Looming ahead, a" + descriptors.sample + "door beckons..."
+        door_description = "Looming ahead, a " + descriptors.sample + "door beckons..."
         @description = door_description
         @room_type = "monster_room"
     end
@@ -77,7 +78,7 @@ attr_writer :description, :door_appearance
 
     def boss_room
         @door_appearance = "passage_way"
-        @door_description = "Heavy breaths sends hot, repugnant air over your party. By the way the hair sticks up on your neck, you can tell something sinister lies in the depths of this passage."
+        @door_description = "Heavy breaths sends hot, repugnant air over your party. You can tell something sinister lies in the depths of this passage."
         @room_type = "boss_room"
     end
     
@@ -88,15 +89,15 @@ attr_writer :description, :door_appearance
     end
 
     def door_selection(party_instance,text_log)
-        case room.room_type 
+        case @room_type 
             when "treasure_room"
-                room.enter_treasure_room(party_instance,text_log)
+                enter_treasure_room(party_instance,text_log)
             when "monster_room"
-                room.enter_monster_room(party_instance,text_log)
+                enter_monster_room(party_instance,text_log)
             when "safe_room"
-                room.enter_safe_room(party_instance,text_log)
+                enter_safe_room(party_instance,text_log)
             when "boss_room"
-                room.enter_boss_room(party_instance,text_log)  
+                enter_boss_room(party_instance,text_log)  
         end
     end  
 end

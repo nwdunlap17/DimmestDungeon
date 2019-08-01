@@ -10,6 +10,62 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 2019_08_01_163332) do
+
+  create_table "actions", force: :cascade do |t|
+    t.text "action_name"
+    t.text "description"
+    t.text "selection_type"
+    t.boolean "target_self"
+    t.integer "mp_cost"
+    t.decimal "damage_multiplier"
+    t.decimal "stun_chance"
+    t.decimal "atk_buff"
+    t.decimal "def_buff"
+    t.decimal "heal_value"
+    t.integer "aggro_change"
+    t.text "job"
+  end
+
+  create_table "adventurers", force: :cascade do |t|
+    t.string "name"
+    t.string "job"
+    t.integer "atk"
+    t.integer "defense"
+    t.integer "max_HP"
+    t.integer "max_MP"
+    t.integer "skill1_id"
+    t.integer "skill2_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "monsters", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.integer "atk"
+    t.integer "defense"
+    t.integer "max_HP"
+    t.integer "level"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ownerships", force: :cascade do |t|
+    t.integer "adventurer_id"
+    t.integer "treasure_id"
+  end
+
+  create_table "treasures", force: :cascade do |t|
+    t.text "name"
+    t.integer "max_HP"
+    t.integer "max_MP"
+    t.integer "attack"
+    t.integer "defense"
+    t.text "description"
+    t.text "rarity"
+    t.text "type"
+    t.integer "value"
+  end
 
 end

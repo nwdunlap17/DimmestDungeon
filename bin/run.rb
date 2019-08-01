@@ -4,11 +4,11 @@ require_relative('environment.rb')
 # Action.Load_Action_List
 # Monster.load_monsters
 
-Kernel.srand(1)
-party = Party.new
+# Kernel.srand(1)
+# party = Party.new
 
-monsters_position = []
-monsters_position << Monster.new_boss_monster
+# monsters_position = []
+# monsters_position << Monster.new_boss_monster
 
 
 
@@ -17,4 +17,6 @@ monsters_position << Monster.new_boss_monster
 
 # monsters = [slime,boblin]
 
-CombatManager.new(party,monsters_position,Text_Log.new)
+# CombatManager.new(party,monsters_position,Text_Log.new)
+
+ExplorationLoop.new

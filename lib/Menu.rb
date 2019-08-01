@@ -9,9 +9,10 @@ class Menu
         return menu.menu_loop
     end
 
-    def initialize(choices, values, y = Curses.lines-5, x = 0, descriptions = [])
+    def initialize(choices, values, y = Curses.lines-5, x = 0, descriptions = [],line_multiplier = 1)
         @choices = choices
         @values = values
+        @line_multiplier = line_multiplier
         @y = y
         @x = x
         @index = 0
@@ -45,10 +46,10 @@ class Menu
 
     def display
         @num_choices.times do |i|
-            Curses.setpos(@y+i,@x)
+            Curses.setpos(@y+i*@line_multiplier,@x)
             Curses.addstr("    #{@choices[i]}")
         end
-        Curses.setpos(@y+@index,@x)
+        Curses.setpos(@y+@index*@line_multiplier,@x)
         Curses.addstr("-->")
         if @descriptions != []
             Curses.setpos(Curses.lines-6,20)

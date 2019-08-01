@@ -1,12 +1,12 @@
 class Treasure < ActiveRecord::Base
 
     def self.LoadTreasures
-        # Treasure.defineMagicItem("Belt of Endurance",10,0,0,0)
-        # Treasure.defineMagicItem("Ring of Rage",0,0,2,0)
-        # Treasure.defineMagicItem("Circlet of Power",0,4,0,0)
-        # Treasure.defineMagicItem("Bangle of Defense",0,0,0,2)
-        # Treasure.defineMagicItem("Helm of Might",5,0,1,0)
-        # Treasure.defineMagicItem("Magic Bracers",0,2,0,1)
+        Treasure.defineMagicItem("Belt of Endurance",10,0,0,0)
+        Treasure.defineMagicItem("Ring of Rage",0,0,2,0)
+        Treasure.defineMagicItem("Circlet of Power",0,4,0,0)
+        Treasure.defineMagicItem("Bangle of Defense",0,0,0,2)
+        Treasure.defineMagicItem("Helm of Might",5,0,1,0)
+        Treasure.defineMagicItem("Magic Bracers",0,2,0,1)
         Treasure.defineMoney("Small Bag of Coins",20)
         Treasure.defineMoney("Large Bag of Coins",50)
         Treasure.defineMoney("Small Treasure Chest",200)
@@ -16,7 +16,7 @@ class Treasure < ActiveRecord::Base
         Treasure.defineMoney("The Biggest Diamond",5000)
     end
 
-    def self.defineMagicItem(name,max_HP,rarity,max_MP,atk,defense)
+    def self.defineMagicItem(name,max_HP,max_MP,atk,defense)
         treas = Treasure.new()
         treas.name = name
         treas.rarity = "rare"

@@ -1,25 +1,25 @@
 class Fork
     #when at the fork, the fork will generate the door appearance and the door description
     #then when a player selects a door option, the actual door contents are revealed, this can be used in ExplorationLoop
-    attr_accessor :depth, :amount_of_rooms, :dungeon_depth, :rooms_in_fork, :fork_actions
+    attr_accessor :depth, :amount_of_rooms, :dungeon_depth, :rooms_in_fork, :fork_actions, :room_labels
 
     def initialize(depth)
         @dungeon_depth = depth
-        @amount_of_rooms = generate_rooms
-        @room_numbers = []
+        @room_labels = []
         @rooms_in_fork = []
+        generate_rooms
+        @amount_of_rooms = @rooms_in_fork.length
     end
 
     def generate_rooms
         rooms = rand(3)+1
-        @dungeon_depth = depth
-        if depth % 10 != 0
-            @rooms_in_fork << Room.new(depth)
-            @room_numbers << "Door 1"
+        if @dungeon_depth % 10 != 0
+            @rooms_in_fork << Room.new(@dungeon_depth)
+            @room_labels << "Door 1"
         else
             rooms.times do |counter|
-            @rooms_in_fork << Room.new(depth)
-            @room_numbers << "Door #{counter}"
+            @rooms_in_fork << Room.new(@dungeon_depth)
+            @room_labels << "Door #{counter+1}"
             end
         end
     end
