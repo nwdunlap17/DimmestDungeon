@@ -23,7 +23,7 @@ class Party
         display_adventurers
         display_menu_outline
         Curses.setpos(1,76)
-        Curses.add "Coins #{@money}"
+        Curses.addstr "Coins #{@money}"
     end
 
     
