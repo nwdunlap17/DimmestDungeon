@@ -64,7 +64,7 @@ ActiveRecord::Schema.define(version: 2019_08_01_163332) do
     t.integer "defense"
     t.text "description"
     t.text "rarity"
-    t.text "type"
+    t.text "treasure_type"
     t.integer "value"
   end
 

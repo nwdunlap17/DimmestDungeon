@@ -4,16 +4,16 @@ class CombatManager
     def initialize(party,monsters_array,textlog)
         #index 1-2 are front, 3-4 back
         #each array position should contain an object instance of representative thing
-    @textlog = textlog
-    @combat_is_over = false
-    @heroes_alive = true
-    @party = party
-    @monsters_alive = true
-    @heroes_position = party.heroes_array
-    @monsters_position = monsters_array
-    @heroes_aggro = []
-    set_up_aggro(2)
-    battle_sequence
+        @textlog = textlog
+        @combat_is_over = false
+        @heroes_alive = true
+        @party = party
+        @monsters_alive = true
+        @heroes_position = party.heroes_array
+        @monsters_position = monsters_array
+        @heroes_aggro = []
+        set_up_aggro(2)
+        battle_sequence
     end
 
     def battle_sequence
@@ -54,9 +54,16 @@ class CombatManager
             self.check_for_dead
         end
         if heroes_alive == false
-            #end game method
-        elsif monsters_alive == false
-            #YEET we won
+            counter = 5
+            5.times do
+                    Curses.clear
+                Curses.setpos(10,10)
+                Curses.addstr"Your party has died. GAME OVER. Game will automatically exit in 5 seconds. Game terminating in #{counter}."
+                Curses.refresh
+                counter -= 1
+                sleep(1)
+            end
+            exit
         end
     end
 
@@ -80,9 +87,9 @@ class CombatManager
         Curses.clear
         @party.standard_menu_display
         display_adventurers(character_picked)
-        Curses.setpos(0,9)
         @monsters_position.length.times do  |index|
-            Curses.addstr " #{monsters_position[index].name} HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP} \n"
+            Curses.setpos(index,9)
+            Curses.addstr " #{monsters_position[index].name} HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP}"
         end
         @textlog.display_text
         Curses.refresh
@@ -156,14 +163,17 @@ class CombatManager
                 end
             end
         end
-        self.monsters_position.each do |monster|
-            if monster.alive? == false
-                monsters_position.delete(monster)
+        index = 0
+        while index < self.monsters_position.length
+            if monsters_position[index].alive? == false
+                monsters_position.delete_at(index)
+                index = 0
                 if monsters_position.empty? == true
                     @monsters_alive = false
                     @combat_is_over = true
                 end
             end
+            index += 1
         end
     end
 

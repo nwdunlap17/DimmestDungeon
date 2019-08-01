@@ -1,19 +1,19 @@
 class Tavern
     attr_accessor :carousel
-    def initialize(party_instance)
+    def initialize(party_instance,text_log)
         @carousel = []
         @party = party_instance
+        @text_log = text_log
         fill_carousel
         tavernLoop
     end
 
     def tavernLoop
         still_in_town = true
-
         while still_in_town
             display
-            choices = ["Hire Member","View Party","To Dungeon","Quit Game"]
-            input = Menu.start(choices,choices,Curses.lines-6,1)
+            choices = ["Hire Member","View Party","To Dungeon","Buy Drinks!","Quit Game"]
+            input = Menu.start(choices,choices,Curses.lines-6,1,["After a few ales, anyone almost would join your party.","Take a look at the sorry lot you've gathered.","Nobody will find loot laying around all day.", "Nothing like a good brew to warm your bellies! (Heals all)","Done for the day?"])
             case input
             when "Hire Member"
                 if @party.heroes_array.length < 4
@@ -23,9 +23,19 @@ class Tavern
                 end
             when "View Party"
                 display(input)
+                dismiss_member_loop
+            when "Buy Drinks!"
+                @text_log.write("A few hearty drinks and your wounds and spirits are recovered!")
+                @party.heroes_array.each do |party_member|
+                    party_member.current_HP = party_member.max_HP
+                    party_member.current_MP = party_member.max_MP
+                end
             when "To Dungeon"
-                #exploration loop
-                still_in_town = false
+                if @party.heroes_array.length >= 1
+                    still_in_town = false
+                else 
+                    @text_log.write("Foolish of you, to wish to journey without adventurers!")
+                end
             when "Quit Game"
                 exit
             end
@@ -36,16 +46,21 @@ class Tavern
         not_done = true
         while not_done == true
             display("Hire Member")
-            input = Menu.start(["Recruit","Refresh","Back"],["Recruit","Refresh","Back"],Curses.lines-6,1)
+            input = Menu.start(["Recruit","Refresh","Back"],["Recruit","Refresh","Back"],Curses.lines-6,1,[])
             case input
             when "Recruit"
+                if @party.heroes_array.length < 4 && @party.money >= 10
                 arr =[]
-                @carousel.length.times do
+                    @carousel.length.times do
                     arr << ""
+                    end
+                    hero_instance = Menu.start(arr,@carousel,1,0,[],3)
+                    @party.heroes_array << hero_instance 
+                    @party.money -= 5
+                    @carousel.delete(hero_instance)
+                else 
+                    @text_log.write("Your party is full!")
                 end
-                hero_instance = Menu.start(arr,@carousel,1,0,[],3)
-                @party << hero_instance 
-                @carousel.delete(hero_instance)
             when "Refresh"
                 refresh_carousel
             when "Back"
@@ -54,6 +69,24 @@ class Tavern
         end
     end
 
+    def dismiss_member_loop
+        not_done = true
+        while not_done == true
+            display("View Party")
+            input = Menu.start(["Dismiss","Back"],["Dismiss","Back"],Curses.lines-6,1)
+            case input
+            when "Dismiss"
+                arr =[]
+                @party.heroes_array.length.times do
+                    arr << ""
+                end
+                hero_instance = Menu.start(arr,@party.heroes_array,1,0,[],3)
+                @party.heroes_array.delete(hero_instance)
+            when "Back"
+                not_done = false
+            end
+        end
+    end
 
     def display(string="")
         Curses.clear
@@ -62,10 +95,10 @@ class Tavern
         when "Hire Member"
             display_adventurers(@carousel)
         when "View Party"
-            display_adventurers(@party)
+            display_adventurers(@party.heroes_array)
         when ""
+            @text_log.display_text
         end
-
         Curses.refresh
     end
 
@@ -86,6 +119,8 @@ class Tavern
     end
 
     def display_adventurers(array)
+        Curses.setpos(1,76)
+        Curses.addstr"Coins:#{@party.money}"
         start_display_line = 1
         array.length.times do  |counter|
             Curses.setpos(start_display_line+counter*3,5)
@@ -119,7 +154,6 @@ class Tavern
             @carousel = []
             fill_carousel
         end
-    end
-        
+    end   
 end
     

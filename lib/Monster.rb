@@ -33,7 +33,7 @@ class Monster  < ActiveRecord::Base
     end
 
     def self.new_boss_monster
-        new_monster = Monster.find_by(level:6)
+        new_monster = Monster.where(level:6).sample
         new_monster.atk = new_monster.atk * 3
         new_monster.max_HP = new_monster.max_HP * 10
         new_monster.is_boss = true
@@ -42,7 +42,7 @@ class Monster  < ActiveRecord::Base
     end
 
     def self.new_monster
-        new_monster = Monster.find_by(level:3)
+        new_monster = Monster.where(level:3).sample
         new_monster.atk = new_monster.atk * 2
         new_monster.max_HP = new_monster.max_HP * 5
         new_monster.is_boss = false

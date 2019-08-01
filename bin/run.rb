@@ -6,9 +6,15 @@ require_relative('environment.rb')
 
 
 # Kernel.srand(1)
-party1 = Party.new
-party1.heroes_array.pop
-Tavern.new(party1)
+# party1 = Party.new
+# party1.heroes_array.pop
+# party1.money = 100
+# text_log = Text_log.new
+# Tavern.new(party1,text_log)
+# # Kernel.srand(1)
+# party1 = Party.new
+# party1.heroes_array.pop
+# Tavern.new(party1)
 
 # monsters_position = []
 # monsters_position << Monster.new_boss_monster
@@ -18,14 +24,11 @@ Tavern.new(party1)
 
 # monsters = [slime,boblin]
 
-<<<<<<< HEAD
 # CombatManager.new(party,monsters_position,Text_Log.new)
 
 ExplorationLoop.new
-=======
 
 
 #CombatManager.new(Party.new.heroes_array,monsters)
 
 #CombatManager.new(party,monsters_position,Text_Log.new)
->>>>>>> 83ae2808cf252eb579e80a26a172310f94dd0122
