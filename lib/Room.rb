@@ -69,10 +69,10 @@ class Room
     def enter_safe_room(party_instance,text_log)
         #input is a party instance's heroes_array => which contains adventurer instances
         party_instance.heroes_array.each do |hero|
-            #puts "#{hero.name} has been healed for #{hero.max_HP - hero.current_HP} health! Health is now #{hero.max_HP}/#{hero.max_HP}."
+            text_log.write("#{hero.name} has been healed for #{hero.max_HP - hero.current_HP} health! Health is now #{hero.max_HP}/#{hero.max_HP}.")
             hero.current_HP = hero.max_HP
         end
-        #puts "Party is fully healed."
+        text_log.write("Party is fully healed.")
         #in future, heals random amount based on how much health
     end
 
@@ -86,6 +86,7 @@ class Room
         monsters_position = []
         monsters_position << Monster.new_boss_monster
         CombatManager.new(party_instance,monsters_position,text_log)
+
     end
 
     def door_selection(party_instance,text_log)
