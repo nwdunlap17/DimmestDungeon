@@ -4,7 +4,7 @@ class Menu
     # When a choice is made, the corresponding value is returned
     # Takes in starting y and x positions for upper left corner of menu
 
-    def Menu.start(choices, values, y = Curses.lines-5, x = 0,descriptions = [])
+    def Menu.start(choices, values, y = Curses.lines-5, x = 0,descriptions = [],line_multiplier=1)
         menu = Menu.new(choices, values, y, x,descriptions)
         return menu.menu_loop
     end

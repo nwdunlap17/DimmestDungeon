@@ -156,14 +156,17 @@ class CombatManager
                 end
             end
         end
-        self.monsters_position.length.times do |index|
+        index = 0
+        while index < self.monsters_position.length
             if monsters_position[index].alive? == false
                 monsters_position.delete_at(index)
+                index = 0
                 if monsters_position.empty? == true
                     @monsters_alive = false
                     @combat_is_over = true
                 end
             end
+            index += 1
         end
     end
 

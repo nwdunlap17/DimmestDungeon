@@ -20,7 +20,7 @@ class Treasure < ActiveRecord::Base
         treas = Treasure.new()
         treas.name = name
         treas.rarity = "rare"
-        treas.type = "Magic Item"
+        treas.treasure_type = "Magic Item"
         treas.max_HP = max_HP
         treas.max_MP = max_MP
         treas.attack = atk
@@ -46,7 +46,7 @@ class Treasure < ActiveRecord::Base
 
     def self.defineMoney(name,value)
         treas = Treasure.new
-        treas.type = "Money"
+        treas.treasure_type = "Money"
         treas.name = name
         if value <= 100
             treas.rarity = "common"
@@ -61,7 +61,6 @@ class Treasure < ActiveRecord::Base
     end
 
     def self.GivePartyTreasure(party, rarity_bonus,text_log)
-        binding.pry
         rarity_roll = rand(100) + rarity_bonus
 
         if rarity_roll <75 
@@ -71,11 +70,9 @@ class Treasure < ActiveRecord::Base
         elsif rarity_roll >= 98
             rarityvalue = "rare"
         end
-
         treasures = Treasure.where(rarity: rarityvalue)
         given_treasure = treasures.sample
-
-        case given_treasure.type
+        case given_treasure.treasure_type
         when "Magic Item"
         when "Money"
             give_money_to_party(party,given_treasure,text_log)

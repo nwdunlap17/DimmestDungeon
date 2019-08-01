@@ -26,8 +26,9 @@ class ExplorationLoop
             if choice == "Leave"
                 @depth = 0
                 Tavern.new(@party)
-            end
+            else
             choice.door_selection(@party,@text_log)
+            end
             @depth += 1
         end
     end
