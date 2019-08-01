@@ -51,7 +51,9 @@ class ExplorationLoop
                 potion = Menu.start(["Potion","Elixir"],["Potion","Elixir"],1,0,["Restores half HP","Restores half MP"],3)
                 case potion
                 when "Potion"
+                    #addition of potion
                 when "Elixir"
+                    #addition of elixir
                 end
             when "Back"
                 not_done = false

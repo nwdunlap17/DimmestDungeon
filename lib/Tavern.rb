@@ -96,6 +96,10 @@ class Tavern
     def display(string="")
         Curses.clear
         @party.standard_menu_display
+        Curses.setpos(0,76)
+        Curses.addstr "Location: Tavern"
+        Curses.setpos(1,76)
+        Curses.addstr "Coins: #{@party.money}"
         case string
         when "Hire Member"
             display_adventurers(@carousel)
