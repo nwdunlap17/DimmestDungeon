@@ -4,16 +4,16 @@ class CombatManager
     def initialize(party,monsters_array,textlog)
         #index 1-2 are front, 3-4 back
         #each array position should contain an object instance of representative thing
-    @textlog = textlog
-    @combat_is_over = false
-    @heroes_alive = true
-    @party = party
-    @monsters_alive = true
-    @heroes_position = party.heroes_array
-    @monsters_position = monsters_array
-    @heroes_aggro = []
-    set_up_aggro(2)
-    battle_sequence
+        @textlog = textlog
+        @combat_is_over = false
+        @heroes_alive = true
+        @party = party
+        @monsters_alive = true
+        @heroes_position = party.heroes_array
+        @monsters_position = monsters_array
+        @heroes_aggro = []
+        set_up_aggro(2)
+        battle_sequence
     end
 
     def battle_sequence
@@ -80,9 +80,9 @@ class CombatManager
         Curses.clear
         @party.standard_menu_display
         display_adventurers(character_picked)
-        Curses.setpos(0,9)
         @monsters_position.length.times do  |index|
-            Curses.addstr " #{monsters_position[index].name} HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP} \n"
+            Curses.setpos(index,9)
+            Curses.addstr " #{monsters_position[index].name} HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP}"
         end
         @textlog.display_text
         Curses.refresh
@@ -156,9 +156,9 @@ class CombatManager
                 end
             end
         end
-        self.monsters_position.each do |monster|
-            if monster.alive? == false
-                monsters_position.delete(monster)
+        self.monsters_position.length.times do |index|
+            if monsters_position[index].alive? == false
+                monsters_position.delete_at(index)
                 if monsters_position.empty? == true
                     @monsters_alive = false
                     @combat_is_over = true

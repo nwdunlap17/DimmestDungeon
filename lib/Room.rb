@@ -6,9 +6,8 @@ class Room
     def initialize(depth)
     @dungeon_depth = depth
     @room_type = ""
-    set_type
-    @description = ""
     @door_appearance = ""
+    set_type
     end
 
     def set_type
@@ -30,20 +29,20 @@ class Room
     def treasure_room
         @door_appearance = "curtain_door"
         descriptors = ["beautiful","magnificient","gorgeous","golden","splendid","brilliant","shining","glorious","grand","grandiose","stately","noble","marvelous"]
-        door_description = "Ahead stands a" + descriptors.sample + "door, which leaves your party awestruck."
+        door_description = "Ahead stands a " + descriptors.sample + " door, which leaves your party awestruck."
         @description = door_description
         @room_type = "treasure_room"
         #puts "You've found a treasure chest!"
     end
 
     def enter_treasure_room(party_instance,text_log)
-        Treasure.GivePartyTreasure(party_instance,@depth)
+        Treasure.GivePartyTreasure(party_instance,@dungeon_depth,text_log)
     end
 
     def monster_room
         @door_appearance = "wooden_door"
         descriptors = ["imposing","monstrous","ominous","dreadful","gloomy","ghastly","horrid","hideous","macabre","unpleasant","terrifying","repulsive","revolting","distasteful","sanguine"]
-        door_description = "Looming ahead, a " + descriptors.sample + "door beckons..."
+        door_description = "Looming ahead, a " + descriptors.sample + " door beckons..."
         @description = door_description
         @room_type = "monster_room"
     end
@@ -61,7 +60,7 @@ class Room
     def safe_room
         @door_appearance = "modern_door"
         descriptors = ["enticing haven","blissful sanctuary","protected garden","secure home","guarded asylum","preserved alcove","hallowed clearing"]
-        door_description = "An inscription on the door reads: Within lies an oasis, a " + descriptors.sample + " blessed with protective sigils awaits!"
+        door_description = "An inscription on the door reads: Within lies a " + descriptors.sample + " blessed with protective sigils."
         @description = door_description
         @room_type = "safe_room"
     end

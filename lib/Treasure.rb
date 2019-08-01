@@ -61,6 +61,7 @@ class Treasure < ActiveRecord::Base
     end
 
     def self.GivePartyTreasure(party, rarity_bonus,text_log)
+        binding.pry
         rarity_roll = rand(100) + rarity_bonus
 
         if rarity_roll <75 
@@ -77,7 +78,7 @@ class Treasure < ActiveRecord::Base
         case given_treasure.type
         when "Magic Item"
         when "Money"
-            give_money_to_party(party,given_treasure)
+            give_money_to_party(party,given_treasure,text_log)
         when "Potion"
         end
     end
