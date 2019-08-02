@@ -9,8 +9,9 @@ class ExplorationLoop
 
     def select_room
         fork_instance = Fork.new(@depth)
-        #@text_log.write("You enter the dungeon...")
-        @text_log.write("You enter the dungeon...")
+        @text_log.write("You wake up in darkness alongside equally confused others.")
+        @text_log.write("Some are crying, others still laying unconscious.")
+        @text_log.write("After some time, a #{@party.heroes_array[1].job} named #{@party.heroes_array[1].name} suggests you band together.")
         while true
             choice_names = fork_instance.room_labels 
             values = fork_instance.rooms_in_fork
@@ -51,7 +52,7 @@ class ExplorationLoop
         not_done = true
         while not_done == true
             display("View Party")
-            input = Menu.start(["Use Potion","Back"],["Use Potion","Back"],Curses.lines-6,1)
+            input = Menu.start(["Use Potion","Back"],["Use Potion","Back"],Curses.lines-6,1,["Rejuvenate your adventurers with what is simply, steroids in a bottle.","Finished viewing? Back to the dungeon."])
             case input
             when "Use Potion"
                 potion = Menu.start(["Potion","Elixir"],["Potion","Elixir"],Curses.lines-11,0,["Restores half HP.    Potions: #{@party.potions}" ,"Restores half MP.    Elixirs: #{@party.elixirs}"])
