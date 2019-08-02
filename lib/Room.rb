@@ -81,7 +81,7 @@ class Room
 
     def boss_room
         @door_appearance = "passage_way"
-        @door_description = "Heavy breaths sends hot, repugnant air over your party. You can tell something sinister lies in the depths of this passage."
+        @description = "Heavy breaths sends hot, repugnant air over your party. You can tell something sinister lies in the depths of this passage."
         @room_type = "boss_room"
     end
     
@@ -101,7 +101,7 @@ class Room
             when "safe_room"
                 enter_safe_room(party_instance,text_log)
             when "boss_room"
-                enter_boss_room(party_instance,text_log)  
+                enter_boss_room(party_instance,text_log) 
         end
     end  
 end

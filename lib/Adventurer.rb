@@ -1,6 +1,6 @@
 class Adventurer < ActiveRecord::Base
-    has_many :treasures
-    has_many :monsters, through: :treasures
+    has_many :ownerships
+    has_many :treasures, through: :ownerships
     attr_accessor :current_MP, :skill1, :skill2
 
     include Combatant

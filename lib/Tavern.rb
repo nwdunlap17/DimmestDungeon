@@ -25,7 +25,7 @@ class Tavern
                 end
             when "View Party"
                 display(input)
-                dismiss_member_loop
+                view_party_loop
             when "Heal Party"
                 if @party.money >= 25
                     @party.money -= 25
@@ -76,12 +76,26 @@ class Tavern
         end
     end
 
-    def dismiss_member_loop
+    def view_party_loop
         not_done = true
         while not_done == true
             display("View Party")
-            input = Menu.start(["Dismiss","Back"],["Dismiss","Back"],Curses.lines-6,1)
+            input = Menu.start(["Treasures","Dismiss","Back"],["Treasures","Dismiss","Back"],Curses.lines-6,1)
             case input
+            when "Treasures"
+                arr =[]
+                @party.heroes_array.length.times do
+                    arr << ""
+                end
+                hero_instance = Menu.start(arr,@party.heroes_array,1,0,[],3)
+                owned_treasure = hero_instance.treasures
+                if owned_treasure.length == 0
+                    array = ["#{hero_instance.name} has no treasures."]
+                else
+                    array = owned_treasure.map{|treas| treas.name}
+                    array.unshift("#{hero_instance.name} has found these treasures:")
+                end
+                display_treasures(array)
             when "Dismiss"
                 arr =[]
                 @party.heroes_array.length.times do
@@ -166,5 +180,24 @@ class Tavern
             fill_carousel
         end
     end   
+
+    def display_treasures(treasures)
+        display = 0
+        treasure_log = Text_Log.new 
+        while display < treasures.length
+            Curses.clear
+            @party.standard_menu_display
+            8.times do |index|
+                index = display + index
+                if index < treasures.length
+                    treasure_log.write(treasures[index])
+                end
+            end
+            treasure_log.display_text
+            Curses.refresh
+            Curses.getch
+            display += 8
+        end
+    end
 end
     
