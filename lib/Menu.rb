@@ -25,7 +25,10 @@ class Menu
         choice = nil
         while !!!choice
             display
-            input = Curses.getch.downcase
+            input = Curses.getch.to_s
+            if "SWD".include?(input)
+                input = input.downcase
+            end
             case input
             when "s"#Curses::Key::DOWN
                 @index += 1

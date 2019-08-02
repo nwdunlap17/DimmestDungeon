@@ -1,6 +1,12 @@
 class Treasure < ActiveRecord::Base
+    has_many :ownerships
+    has_many :adventurers, through: :ownerships
 
     def self.LoadTreasures
+        Treasure.defineBlessing("Blessing of Flame",10,0,2,0)
+        Treasure.defineBlessing("Blessing of Water",0,5,0,2)
+        Treasure.defineBlessing("Blessing of Earth",0,0,2,2)
+        Treasure.defineBlessing("Blessing of Wind",0,5,2,0)
         Treasure.defineMagicItem("Belt of Endurance",10,0,0,0)
         Treasure.defineMagicItem("Ring of Rage",0,0,2,0)
         Treasure.defineMagicItem("Circlet of Power",0,4,0,0)
@@ -15,10 +21,38 @@ class Treasure < ActiveRecord::Base
         Treasure.defineMoney("Giant Diamond",1000)
         Treasure.defineMoney("Massive Diamond",5000)
         Treasure.definePotion("Potions",2,0)
-        Treasure.definePotion("Elixers",0,2)
+        Treasure.definePotion("Elixirs",0,2)
         Treasure.definePotion("ManyPotions",3,0)
-        Treasure.definePotion("ManyElixers",0,3)
-        Treasure.definePotion("PotionsAndElixers",2,2)
+        Treasure.definePotion("ManyElixirs",0,3)
+        Treasure.definePotion("PotionsAndElixirs",2,2)
+    end
+
+    def self.defineBlessing(name,max_HP,max_MP,atk,defense)
+        treas = Treasure.new()
+        treas.name = name
+        treas.rarity = "epic"
+        treas.treasure_type = "Blessing"
+        treas.max_HP = max_HP
+        treas.max_MP = max_MP
+        treas.attack = atk
+        treas.defense = defense
+        descriptors = []
+        if max_HP > 0
+            descriptors << "Max HP +#{max_HP}"
+        end
+        if max_MP > 0
+            descriptors << " Max MP +#{max_MP}"
+        end
+        if atk > 0
+            descriptors << " ATK +#{atk}"
+        end
+        if defense > 0
+            descriptors << " DEF +#{defense}"
+        end
+        description = descriptors.join(',')
+        description = description.strip
+        treas.description = description
+        treas.save
     end
 
     def self.defineMagicItem(name,max_HP,max_MP,atk,defense)
@@ -65,25 +99,26 @@ class Treasure < ActiveRecord::Base
         treas.save
     end
 
-    def self.definePotion(name,potquantity,elixerquantity)
+    def self.definePotion(name,potquantity,elixirquantity)
         treas = Treasure.new
         treas.name = name
         treas.treasure_type = "Potion"
         treas.rarity = "uncommon"
         treas.potions = potquantity
-        treas.elixers = elixerquantity
+        treas.elixirs = elixirquantity
         treas.save
     end
 
     def self.GivePartyTreasure(party, rarity_bonus,text_log)
         rarity_roll = rand(100) + rarity_bonus
-        rarity_roll = 80
         if rarity_roll <75 
             rarityvalue = "common"
         elsif rarity_roll >= 76 && rarity_roll < 98
             rarityvalue = "uncommon"
-        elsif rarity_roll >= 98
+        elsif rarity_roll >= 98 && rarity_roll < 190
             rarityvalue = "rare"
+        else
+            rarityvalue = "epic"
         end
         treasures = Treasure.where(rarity: rarityvalue)
         given_treasure = treasures.sample
@@ -94,6 +129,8 @@ class Treasure < ActiveRecord::Base
             give_money_to_party(party,given_treasure,text_log)
         when "Potion"
             give_potion_to_party(party,given_treasure,text_log)
+        when "Blessing"
+            give_blessing_to_party(party,given_treasure,text_log)
         end
     end
 
@@ -105,15 +142,18 @@ class Treasure < ActiveRecord::Base
         party.money += total_worth
         text_log.write("You found a #{given_treasure.name}!")
         text_log.write("It's worth #{total_worth} coins.")
+        party.heroes_array.each do |hero|
+            Ownership.create(adventurer_id: hero.id, treasure_id: given_treasure.id)
+        end
     end
     def self.give_potion_to_party(party,given_treasure,text_log)
         if given_treasure.potions > 0
             text_log.write("You found #{given_treasure.potions} Potions!")
             party.potions += given_treasure.potions
         end
-        if given_treasure.elixers > 0
-            text_log.write("You found #{given_treasure.elixers} Elixers!")
-            party.elixers += given_treasure.elixers
+        if given_treasure.elixirs > 0
+            text_log.write("You found #{given_treasure.elixirs} Elixirs!")
+            party.elixirs += given_treasure.elixirs
         end
     end
     def self.give_magic_item_to_party(party,given_treasure,text_log)
@@ -132,6 +172,19 @@ class Treasure < ActiveRecord::Base
         selection.defense += given_treasure.defense
         Ownership.create(adventurer_id: selection.id, treasure_id: given_treasure.id)
     end
+    def self.give_blessing_to_party(party,given_treasure,text_log)
+        text_log.write("For overcoming this trial, your party has received a #{given_treasure.name}")
+        text_log.write("Your party's stats have imporoved!")
+        party.heroes_array.each do |selection|
+            selection.max_HP += given_treasure.max_HP
+            selection.current_HP += given_treasure.max_HP
+            selection.max_MP += given_treasure.max_MP
+            selection.current_MP += given_treasure.max_MP
+            selection.atk += given_treasure.attack
+            selection.defense += given_treasure.defense
+            Ownership.create(adventurer_id: selection.id, treasure_id: given_treasure.id)
+        end
+    end
     def self.display(party,given_treasure)
         Curses.clear
         Curses.setpos(2,25)
@@ -145,7 +198,7 @@ class Treasure < ActiveRecord::Base
 
     def self.display_adventurers(party)
         Curses.setpos(1,76)
-        Curses.addstr"Coins:#{party.money}"
+        Curses.addstr"Coins: #{party.money}"
         start_display_line = 5
         array = party.heroes_array
         array.length.times do  |counter|

@@ -4,7 +4,7 @@ class CombatManager
     def initialize(party,monsters_array,textlog)
         #index 1-2 are front, 3-4 back
         #each array position should contain an object instance of representative thing
-        @textlog = textlog
+        @text_log = textlog
         @combat_is_over = false
         @heroes_alive = true
         @party = party
@@ -18,7 +18,7 @@ class CombatManager
 
     def battle_sequence
         @monsters_position.each do |monster|
-            @textlog.write("A #{monster.name} appeared!")
+            @text_log.write("A #{monster.name} appeared!")
         end
         battle_array = []
         while @combat_is_over == false
@@ -41,7 +41,7 @@ class CombatManager
             display(character_picked)
             if character_picked.stunned && (rand(2) == 0)
                 character_picked.stunned = false
-                @textlog.write("#{character_picked.name} was too stunned to move!")
+                @text_log.write("#{character_picked.name} was too stunned to move!")
             else
                 if heroes_position.include?(character_picked)
                     chosen_action = choose_action_for_character(character_picked)
@@ -83,8 +83,8 @@ class CombatManager
         if @party.potions > 0
             choices << Action.use_potion
         end
-        if @party.elixers > 0
-            choices << Action.use_elixer
+        if @party.elixirs > 0
+            choices << Action.use_elixir
         end
         choices.each do |action|
             names_of_choices << action.action_name
@@ -97,8 +97,8 @@ class CombatManager
             end
             if choices[index].action_name == "Potion"
                 description_of_choices[index] += "#{@party.potions}."
-            elsif choices[index].action_name == "Elixer"
-                description_of_choices[index] += "#{@party.elixers}."
+            elsif choices[index].action_name == "Elixir"
+                description_of_choices[index] += "#{@party.elixirs}."
             end
         end
         return Menu.start(names_of_choices,choices,Curses.lines-6,1,description_of_choices)
@@ -116,7 +116,7 @@ class CombatManager
                 Curses.addstr "@"
             end
         end
-        @textlog.display_text
+        @text_log.display_text
         Curses.refresh
     end
 
@@ -153,7 +153,7 @@ class CombatManager
                 @heroes_aggro << character
             end
         else
-            @textlog.write("#{character.name} is already as hidden as possible!")
+            @text_log.write("#{character.name} is already as hidden as possible!")
         end
     end
 
@@ -168,10 +168,10 @@ class CombatManager
     def check_for_dead
         self.heroes_position.each do |hero|
             if hero.alive? == false
-                @textlog.write("#{hero.name} has died.")
+                @text_log.write("#{hero.name} has died.")
                 heroes_position.delete(hero)
                 heroes_aggro.delete(hero)
-                @textlog.write("After the math, it seems that #{hero.name} has perished.")
+                @text_log.write("After the math, it seems that #{hero.name} has perished.")
                 if heroes_position.empty? == true
                     @heroes_alive = false
                     @combat_is_over = true
@@ -181,7 +181,7 @@ class CombatManager
         index = 0
         while index < self.monsters_position.length
             if monsters_position[index].alive? == false
-                @textlog.write("#{monsters_position[index].name} has been slain.")
+                @text_log.write("#{monsters_position[index].name} has been slain.")
                 monsters_position.delete_at(index)
                 index = 0
                 if monsters_position.empty? == true
@@ -202,21 +202,21 @@ class CombatManager
     # action is used Action
     # defenders and allied_targets are arrays of Combatants
     def execute_action(actor,action,damage_targets,buff_targets)
-        @textlog.write("#{actor.name} used #{action.action_name}.")
+        @text_log.write("#{actor.name} used #{action.action_name}.")
         if action.mp_cost > 0
             actor.current_MP -= action.mp_cost
         end
         if action.action_name == "Potion"
             @party.potions -= 1
-        elsif action.action_name == "Elixer"
-            @party.elixers -= 1
+        elsif action.action_name == "Elixir"
+            @party.elixirs -= 1
         end
         damage_targets.each do |target|
             deal_damage(actor,target,action)
             if action.stun_chance > 0
                 if rand(10) < (action.stun_chance*10)
                     target.stunned = true
-                    @textlog.write("#{target.name} is dizzy!")
+                    @text_log.write("#{target.name} is dizzy!")
                 end
             end
         end
@@ -237,7 +237,7 @@ class CombatManager
         damage_dealt = 1
     end
     defender.current_HP -= damage_dealt
-    @textlog.write("#{defender.name} took #{damage_dealt} damage!")
+    @text_log.write("#{defender.name} took #{damage_dealt} damage!")
  end
 
  def apply_buff(target, action)
@@ -256,16 +256,16 @@ class CombatManager
         target.current_MP = target.max_MP
     end
     if action.atk_buff > 0
-        @textlog.write("#{target.name}'s ATK has improved.")
+        @text_log.write("#{target.name}'s ATK has improved.")
     end
     if action.def_buff > 0
-        @textlog.write("#{target.name}'s DEF has improved.")
+        @text_log.write("#{target.name}'s DEF has improved.")
     end
     if heal_amount > 0
-        @textlog.write("#{target.name} has healed #{heal_amount} HP.")
+        @text_log.write("#{target.name} has healed #{heal_amount} HP.")
     end
     if restore_amount > 0
-        @textlog.write("#{target.name} has restored #{restore_amount} MP.")
+        @text_log.write("#{target.name} has restored #{restore_amount} MP.")
     end
  end
 

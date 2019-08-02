@@ -68,7 +68,7 @@ ActiveRecord::Schema.define(version: 2019_08_01_163332) do
     t.text "treasure_type"
     t.integer "value"
     t.integer "potions"
-    t.integer "elixers"
+    t.integer "elixirs"
   end
 
 end

@@ -1,10 +1,10 @@
 class Party
     attr_accessor :heroes_array
-    attr_accessor :money, :potions, :elixers, :hipotions, :hielixers
+    attr_accessor :money, :potions, :elixirs, :hipotions, :hielixirs
     def initialize
         @money = 10
         @potions = 1
-        @elixers = 1
+        @elixirs = 1
         @heroes_array = []
         4.times do 
             @heroes_array << Adventurer.generate_new_adventurer_with_job

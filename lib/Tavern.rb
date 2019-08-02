@@ -15,7 +15,7 @@ class Tavern
         while still_in_town
             display
             choices = ["Hire Member","View Party","To Dungeon","Heal Party","Quit Game"]
-            input = Menu.start(choices,choices,Curses.lines-6,1,["After a few ales, anyone almost would join your party.","Take a look at the sorry lot you've gathered.","Nobody will find loot laying around all day.", "Nothing like a good brew to warm your bellies! cost: 25g","Done for the day?"])
+            input = Menu.start(choices,choices,Curses.lines-6,1,["After a few ales, anyone almost would join your party.","Take a look at the sorry lot you've gathered.","Nobody will find loot laying around all day.", "Nothing like a good brew to warm your bellies! Costs 25 coin.","Done for the day?"])
             case input
             when "Hire Member"
                 if @party.heroes_array.length < 4
@@ -25,7 +25,7 @@ class Tavern
                 end
             when "View Party"
                 display(input)
-                dismiss_member_loop
+                view_party_loop
             when "Heal Party"
                 if @party.money >= 25
                     @party.money -= 25
@@ -53,10 +53,10 @@ class Tavern
         not_done = true
         while not_done == true
             display("Hire Member")
-            input = Menu.start(["Recruit","Refresh","Back"],["Recruit","Refresh","Back"],Curses.lines-6,1,[])
+            input = Menu.start(["Recruit","Refresh","Back"],["Recruit","Refresh","Back"],Curses.lines-6,1,["Hire one of these fools. Costs 5 coin.","Bring in a new lot. Costs 5 coin.",""])
             case input
             when "Recruit"
-                if @party.heroes_array.length < 4 && @party.money >= 10
+                if @party.heroes_array.length < 4 && @party.money >= 5
                 arr =[]
                     @carousel.length.times do
                     arr << ""
@@ -76,12 +76,26 @@ class Tavern
         end
     end
 
-    def dismiss_member_loop
+    def view_party_loop
         not_done = true
         while not_done == true
             display("View Party")
-            input = Menu.start(["Dismiss","Back"],["Dismiss","Back"],Curses.lines-6,1)
+            input = Menu.start(["Treasures","Dismiss","Back"],["Treasures","Dismiss","Back"],Curses.lines-6,1)
             case input
+            when "Treasures"
+                arr =[]
+                @party.heroes_array.length.times do
+                    arr << ""
+                end
+                hero_instance = Menu.start(arr,@party.heroes_array,1,0,[],3)
+                owned_treasure = hero_instance.treasures
+                if owned_treasure.length == 0
+                    array = ["#{hero_instance.name} has no treasures."]
+                else
+                    array = owned_treasure.map{|treas| treas.name}
+                    array.unshift("#{hero_instance.name} has found these treasures:")
+                end
+                display_treasures(array)
             when "Dismiss"
                 arr =[]
                 @party.heroes_array.length.times do
@@ -131,7 +145,7 @@ class Tavern
 
     def display_adventurers(array)
         Curses.setpos(1,76)
-        Curses.addstr"Coins:#{@party.money}"
+        Curses.addstr"Coins: #{@party.money}"
         start_display_line = 1
         array.length.times do  |counter|
             Curses.setpos(start_display_line+counter*3,5)
@@ -166,5 +180,24 @@ class Tavern
             fill_carousel
         end
     end   
+
+    def display_treasures(treasures)
+        display = 0
+        treasure_log = Text_Log.new 
+        while display < treasures.length
+            Curses.clear
+            @party.standard_menu_display
+            8.times do |index|
+                index = display + index
+                if index < treasures.length
+                    treasure_log.write(treasures[index])
+                end
+            end
+            treasure_log.display_text
+            Curses.refresh
+            Curses.getch
+            display += 8
+        end
+    end
 end
     
