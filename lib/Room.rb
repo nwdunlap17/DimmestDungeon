@@ -1,7 +1,7 @@
 class Room
 # another method will call on the rooms
 # rooms need to know what kind of room it is
-    attr_accessor :description, :door_appearance
+    attr_accessor :description, :door_appearance, :room_type
     
     def initialize(depth)
     @dungeon_depth = depth
@@ -54,7 +54,7 @@ class Room
         amount_slimes.times do
             monsters_position << Monster.new_monster
         end
-        CombatManager.new(party_instance,monsters_position,text_log)
+        CombatManager.new(party_instance,monsters_position,text_log,@dungeon_depth)
         if rand(3) == 0
             text_log.write("You find treasure!")
             Treasure.GivePartyTreasure(party_instance,@dungeon_depth+10,text_log)
@@ -88,7 +88,7 @@ class Room
     def enter_boss_room(party_instance,text_log)
         monsters_position = []
         monsters_position << Monster.new_boss_monster
-        CombatManager.new(party_instance,monsters_position,text_log)
+        CombatManager.new(party_instance,monsters_position,text_log,@dungeon_depth)
         Treasure.GivePartyTreasure(party_instance,@dungeon_depth+90,text_log)
     end
 

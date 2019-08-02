@@ -5,4 +5,5 @@ require_relative('environment.rb')
 Curses.stdscr.keypad = true
 ActiveRecord::Base.logger.level = 1
 
+start_screen
 ExplorationLoop.new

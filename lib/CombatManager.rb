@@ -1,10 +1,11 @@
 class CombatManager
     attr_accessor :heroes_position, :monsters_position, :combat_is_over, :heroes_alive, :monsters_alive, :heroes_aggro
 
-    def initialize(party,monsters_array,textlog)
+    def initialize(party,monsters_array,textlog,depth)
         #index 1-2 are front, 3-4 back
         #each array position should contain an object instance of representative thing
         @text_log = textlog
+        @depth = depth
         @combat_is_over = false
         @heroes_alive = true
         @party = party
@@ -120,6 +121,8 @@ class CombatManager
             end
         end
         @text_log.display_text
+        Curses.setpos(0,76)
+        Curses.addstr "Depth: #{@depth}"
         Curses.refresh
     end
 
