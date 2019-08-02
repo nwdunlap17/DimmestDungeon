@@ -17,10 +17,10 @@ class Treasure < ActiveRecord::Base
         Treasure.defineMoney("Giant Diamond",1000)
         Treasure.defineMoney("Massive Diamond",5000)
         Treasure.definePotion("Potions",2,0)
-        Treasure.definePotion("Elixers",0,2)
+        Treasure.definePotion("Elixirs",0,2)
         Treasure.definePotion("ManyPotions",3,0)
-        Treasure.definePotion("ManyElixers",0,3)
-        Treasure.definePotion("PotionsAndElixers",2,2)
+        Treasure.definePotion("ManyElixirs",0,3)
+        Treasure.definePotion("PotionsAndElixirs",2,2)
     end
 
     def self.defineMagicItem(name,max_HP,max_MP,atk,defense)
@@ -67,13 +67,13 @@ class Treasure < ActiveRecord::Base
         treas.save
     end
 
-    def self.definePotion(name,potquantity,elixerquantity)
+    def self.definePotion(name,potquantity,elixirquantity)
         treas = Treasure.new
         treas.name = name
         treas.treasure_type = "Potion"
         treas.rarity = "uncommon"
         treas.potions = potquantity
-        treas.elixers = elixerquantity
+        treas.elixirs = elixirquantity
         treas.save
     end
 
@@ -115,9 +115,9 @@ class Treasure < ActiveRecord::Base
             text_log.write("You found #{given_treasure.potions} Potions!")
             party.potions += given_treasure.potions
         end
-        if given_treasure.elixers > 0
-            text_log.write("You found #{given_treasure.elixers} Elixers!")
-            party.elixers += given_treasure.elixers
+        if given_treasure.elixirs > 0
+            text_log.write("You found #{given_treasure.elixirs} Elixirs!")
+            party.elixirs += given_treasure.elixirs
         end
     end
     def self.give_magic_item_to_party(party,given_treasure,text_log)

@@ -83,8 +83,8 @@ class CombatManager
         if @party.potions > 0
             choices << Action.use_potion
         end
-        if @party.elixers > 0
-            choices << Action.use_elixer
+        if @party.elixirs > 0
+            choices << Action.use_elixir
         end
         choices.each do |action|
             names_of_choices << action.action_name
@@ -97,8 +97,8 @@ class CombatManager
             end
             if choices[index].action_name == "Potion"
                 description_of_choices[index] += "#{@party.potions}."
-            elsif choices[index].action_name == "Elixer"
-                description_of_choices[index] += "#{@party.elixers}."
+            elsif choices[index].action_name == "Elixir"
+                description_of_choices[index] += "#{@party.elixirs}."
             end
         end
         return Menu.start(names_of_choices,choices,Curses.lines-6,1,description_of_choices)
@@ -208,8 +208,8 @@ class CombatManager
         end
         if action.action_name == "Potion"
             @party.potions -= 1
-        elsif action.action_name == "Elixer"
-            @party.elixers -= 1
+        elsif action.action_name == "Elixir"
+            @party.elixirs -= 1
         end
         damage_targets.each do |target|
             deal_damage(actor,target,action)
