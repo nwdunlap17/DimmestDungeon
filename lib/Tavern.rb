@@ -81,7 +81,7 @@ class Tavern
         not_done = true
         while not_done == true
             display("View Party")
-            input = Menu.start(["Magic Items","Dismiss","Back"],["Magic Items","Dismiss","Back"],Curses.lines-6,1)
+            input = Menu.start(["Magic Items","Dismiss","Back"],["Magic Items","Dismiss","Back"],Curses.lines-6,1,["View equipped items","Not very fond of them, yea? Send them on their way."])
             case input
             when "Magic Items"
                 arr =[]
