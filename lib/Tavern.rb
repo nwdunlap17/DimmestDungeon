@@ -40,6 +40,7 @@ class Tavern
             when "To Dungeon"
                 if @party.heroes_array.length >= 1
                     still_in_town = false
+                    @text_log.write("You enter the dungeon...")
                 else 
                     @text_log.write("Foolish of you, to wish to journey without adventurers!")
                 end

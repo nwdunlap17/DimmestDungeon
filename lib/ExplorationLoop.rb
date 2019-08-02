@@ -8,10 +8,8 @@ class ExplorationLoop
     end
 
     def select_room
+        @text_log.write("You enter the dungeon...")
         while true
-            if @depth == 1
-                @text_log.write("You enter the dungeon...")
-            end
             fork_instance = Fork.new(@depth)
             choice_names = fork_instance.room_labels 
             values = fork_instance.rooms_in_fork
@@ -19,7 +17,7 @@ class ExplorationLoop
             fork_instance.rooms_in_fork.each do |room|
                 descriptions << room.description
             end
-            descriptions << "View Party"
+            descriptions << "Take a moment to converse with your fellow adventurers."
             descriptions << "Flee to safety"
             choice_names << "View Party"
             choice_names << "To Tavern"
@@ -35,9 +33,11 @@ class ExplorationLoop
                 display(choice)
                 view_adventurer_loop
             else
-            choice.door_selection(@party,@text_log)
+                choice.door_selection(@party,@text_log)
             end
-            @depth += 1
+            if choice != "View Party" 
+                @depth += 1
+            end
         end
     end
 
