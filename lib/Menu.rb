@@ -25,17 +25,25 @@ class Menu
         choice = nil
         while !!!choice
             display
+            Curses.stdscr.keypad = true
             input = Curses.getch.to_s
-            if "SWD".include?(input)
+            if "SWDJK".include?(input)
                 input = input.downcase
             end
+            if input == "s" || input == "k" 
+                input = "down"
+            elsif input == "w" || input == "j"
+                input = "up"
+            elsif input == "d"
+                input = "d"
+            end
             case input
-            when "s"#Curses::Key::DOWN
+            when "down"#Curses::Key::DOWN
                 @index += 1
                 if @index == @num_choices
                     @index = 0
                 end
-            when "w"#Curses::Key::UP
+            when "up" #Curses::Key::UP
                 @index -= 1
                 if @index == -1
                     @index = @num_choices-1

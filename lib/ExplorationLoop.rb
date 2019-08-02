@@ -9,6 +9,7 @@ class ExplorationLoop
 
     def select_room
         fork_instance = Fork.new(@depth)
+        #@text_log.write("You enter the dungeon...")
         @text_log.write("You enter the dungeon...")
         while true
             choice_names = fork_instance.room_labels 

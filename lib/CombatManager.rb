@@ -17,6 +17,9 @@ class CombatManager
     end
 
     def battle_sequence
+        @heroes_position.each do |hero|
+            hero.reset_buffs
+        end
         @monsters_position.each do |monster|
             @text_log.write("A #{monster.name} appeared!")
         end
@@ -168,10 +171,11 @@ class CombatManager
     def check_for_dead
         self.heroes_position.each do |hero|
             if hero.alive? == false
-                @text_log.write("#{hero.name} has died.")
+                eulogy_quotes = ["May they rest in peace.","Who will be next, I wonder?","From dust, to dust."]
+                @text_log.write("#{hero.name} has died. #{eulogy_quotes.sample}")
                 heroes_position.delete(hero)
                 heroes_aggro.delete(hero)
-                @text_log.write("After the math, it seems that #{hero.name} has perished.")
+                hero.delete
                 if heroes_position.empty? == true
                     @heroes_alive = false
                     @combat_is_over = true

@@ -7,7 +7,7 @@ class Party
         @elixirs = 1
         @heroes_array = []
         4.times do 
-            @heroes_array << Adventurer.generate_new_adventurer_with_job
+            @heroes_array << Adventurer.get_random_adventurer(self.heroes_array)
         end
     end
 

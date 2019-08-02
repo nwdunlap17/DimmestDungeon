@@ -14,9 +14,6 @@ require_relative '../lib/Combatant.rb'
 require_relative '../lib/CombatManager.rb'
 require_relative '../lib/Adventurer.rb'
 require_relative '../lib/Monster.rb'
-# require_relative '../lib/Textlog.rb'
-# require_relative '../lib/treasure.rb'
-# require_relative '../lib/Room.rb
 
 Bundler.require
 
@@ -26,3 +23,6 @@ ActiveRecord::Base.establish_connection(
 )
 
 require_all 'lib'
+
+system 'printf "\e[8;41;123t"'
+system "\n"

@@ -168,13 +168,22 @@ class Tavern
     end
 
     def fill_carousel
+        already_in_use = []
+        @party.heroes_array.each do |hero|
+            already_in_use << hero
+        end
         4.times do 
-           @carousel <<  Adventurer.generate_new_adventurer_with_job
+           hero = Adventurer.get_random_adventurer(already_in_use)
+           @carousel <<  hero
+           already_in_use << hero
         end
     end
 
     def refresh_carousel
         if  @party.money >= 5
+            carousel.each do |adventurer|
+                adventurer.delete
+            end
             @party.money = @party.money - 5
             @carousel = []
             fill_carousel
