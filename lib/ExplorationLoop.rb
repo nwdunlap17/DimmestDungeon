@@ -62,8 +62,12 @@ class ExplorationLoop
                         arr << ""
                         end
                     hero_instance = Menu.start(arr,@party.heroes_array,1,0,[],3)
-                    give_potion(hero_instance, Action.use_potion)
-                    @party.potions -= 1
+                        if hero_instance.current_HP == hero_instance.max_HP
+                            @text_log.write("#{hero_instance.name} refuses to drink the vile solution as they are at full health.")
+                        else
+                            give_potion(hero_instance, Action.use_potion)
+                            @party.potions -= 1
+                        end
                     else 
                         @text_log.write("Potion not used. Insufficient amount of potions in inventory.")
                     end
@@ -74,8 +78,12 @@ class ExplorationLoop
                         arr << ""
                         end
                     hero_instance = Menu.start(arr,@party.heroes_array,1,0,[],3)
-                    give_potion(hero_instance, Action.use_elixir)
-                    @party.elixirs -= 1
+                        if hero_instance.current_MP == hero_instance.max_MP
+                            @text_log.write("#{hero_instance.name} refuses to drink the vile solution as they are at full mana.")
+                        else
+                        give_potion(hero_instance, Action.use_elixir)
+                        @party.elixirs -= 1
+                        end
                     else 
                         @text_log.write("Elixir not used. Insufficient amount of potions in inventory.")
                     end
@@ -100,10 +108,10 @@ class ExplorationLoop
             target.current_MP = target.max_MP
         end
         if heal_amount > 0
-            @text_log.write("You used a health potion on #{target.name}. They healed #{heal_amount} HP.")
+            @text_log.write("#{target.name} gratefully accepts the potion. They healed #{heal_amount} HP.")
         end
         if restore_amount > 0
-            @text_log.write("You used an elixir on #{target.name}. They restored #{restore_amount} MP.")
+            @text_log.write("#{target.name} gratefully accepts the elixir. They restored #{restore_amount} MP.")
         end
      end
 
@@ -112,6 +120,7 @@ class ExplorationLoop
         @party.standard_menu_display
             if string == "View Party"
                 display_adventurers(@party.heroes_array)
+                @text_log.display_text
             else 
                 @text_log.display_text
             end
