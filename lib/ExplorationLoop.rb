@@ -8,9 +8,9 @@ class ExplorationLoop
     end
 
     def select_room
+        fork_instance = Fork.new(@depth)
         @text_log.write("You enter the dungeon...")
         while true
-            fork_instance = Fork.new(@depth)
             choice_names = fork_instance.room_labels 
             values = fork_instance.rooms_in_fork
             descriptions = []
@@ -23,20 +23,25 @@ class ExplorationLoop
             choice_names << "To Tavern"
             values << "View Party"
             values << "To Tavern"
-            display
-            # choice = fork_instance.rooms_in_fork[0]
-            choice = Menu.start(choice_names,values,Curses.lines-6,0,descriptions)
-            if choice == "To Tavern"
-                @depth = 0
-                Tavern.new(@party,@text_log)
-            elsif choice == "View Party"
-                display(choice)
-                view_adventurer_loop
-            else
-                choice.door_selection(@party,@text_log)
-            end
-            if choice != "View Party" 
-                @depth += 1
+            new_fork = false
+            while new_fork == false
+                display
+                choice = Menu.start(choice_names,values,Curses.lines-6,0,descriptions)
+                if choice == "To Tavern"
+                    Tavern.new(@party,@text_log)
+                    @text_log.write("You enter the dungeon...")
+                    @depth = 1
+                    fork_instance = Fork.new(@depth)
+                    new_fork = true
+                elsif choice == "View Party"
+                    display(choice)
+                    view_adventurer_loop
+                else
+                    choice.door_selection(@party,@text_log)
+                    @depth += 1
+                    fork_instance = Fork.new(@depth)
+                    new_fork = true
+                end
             end
         end
     end
