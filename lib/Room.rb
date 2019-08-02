@@ -81,7 +81,7 @@ class Room
 
     def boss_room
         @door_appearance = "passage_way"
-        @description = "Heavy breaths sends hot, repugnant air over your party. You can tell something sinister lies in the depths of this passage."
+        @description = "Heavy breaths sends hot, repugnant air over your party. Something sinister lies in the depths of this passage."
         @room_type = "boss_room"
     end
     
