@@ -15,7 +15,7 @@ class Tavern
         while still_in_town
             display
             choices = ["Hire Member","View Party","To Dungeon","Heal Party","Quit Game"]
-            input = Menu.start(choices,choices,Curses.lines-6,1,["After a few ales, anyone almost would join your party.","Take a look at the sorry lot you've gathered.","Nobody will find loot laying around all day.", "Nothing like a good brew to warm your bellies! cost: 25g","Done for the day?"])
+            input = Menu.start(choices,choices,Curses.lines-6,1,["After a few ales, anyone almost would join your party.","Take a look at the sorry lot you've gathered.","Nobody will find loot laying around all day.", "Nothing like a good brew to warm your bellies! Costs 25 coin.","Done for the day?"])
             case input
             when "Hire Member"
                 if @party.heroes_array.length < 4
@@ -53,10 +53,10 @@ class Tavern
         not_done = true
         while not_done == true
             display("Hire Member")
-            input = Menu.start(["Recruit","Refresh","Back"],["Recruit","Refresh","Back"],Curses.lines-6,1,[])
+            input = Menu.start(["Recruit","Refresh","Back"],["Recruit","Refresh","Back"],Curses.lines-6,1,["Hire one of these fools. Costs 5 coin.","Bring in a new lot. Costs 5 coin.",""])
             case input
             when "Recruit"
-                if @party.heroes_array.length < 4 && @party.money >= 10
+                if @party.heroes_array.length < 4 && @party.money >= 5
                 arr =[]
                     @carousel.length.times do
                     arr << ""
@@ -145,7 +145,7 @@ class Tavern
 
     def display_adventurers(array)
         Curses.setpos(1,76)
-        Curses.addstr"Coins:#{@party.money}"
+        Curses.addstr"Coins: #{@party.money}"
         start_display_line = 1
         array.length.times do  |counter|
             Curses.setpos(start_display_line+counter*3,5)

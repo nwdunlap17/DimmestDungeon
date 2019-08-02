@@ -28,13 +28,26 @@ class Adventurer < ActiveRecord::Base
         hero.current_HP = hero.max_HP
         hero.reset_buffs
         if name == ""
-            api_response = RestClient.get("https://randomuser.me/api/")
-            parsed = JSON.parse(api_response.body)
-            hero.name = parsed["results"][0]["name"]["first"].capitalize
+            hero.name = Adventurer.generate_random_name
         else
             hero.name = name
         end
         return hero
+    end
+
+    def self.generate_random_name
+        name = nil
+        while name == nil
+            api_response = RestClient.get("https://randomuser.me/api/")
+            parsed = JSON.parse(api_response.body)
+            tryname = parsed["results"][0]["name"]["first"]
+            tryname.length.times do |index|
+                if "abcdefghijklmnopqrstuvwxyz".include?(tryname[index])
+                    name = tryname.capitalize
+                end
+            end
+        end
+        return name
     end
 
     def self.generate_new_adventurer_with_job

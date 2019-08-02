@@ -149,7 +149,7 @@ class Treasure < ActiveRecord::Base
 
     def self.display_adventurers(party)
         Curses.setpos(1,76)
-        Curses.addstr"Coins:#{party.money}"
+        Curses.addstr"Coins: #{party.money}"
         start_display_line = 5
         array = party.heroes_array
         array.length.times do  |counter|

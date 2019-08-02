@@ -78,7 +78,7 @@ class ExplorationLoop
 
     def display_adventurers(array)
         Curses.setpos(1,76)
-        Curses.addstr"Coins:#{@party.money}"
+        Curses.addstr"Coins: #{@party.money}"
         start_display_line = 1
         array.length.times do  |counter|
             Curses.setpos(start_display_line+counter*3,5)
