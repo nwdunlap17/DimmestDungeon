@@ -81,9 +81,9 @@ class Tavern
         not_done = true
         while not_done == true
             display("View Party")
-            input = Menu.start(["Treasures","Dismiss","Back"],["Treasures","Dismiss","Back"],Curses.lines-6,1)
+            input = Menu.start(["Magic Items","Dismiss","Back"],["Magic Items","Dismiss","Back"],Curses.lines-6,1)
             case input
-            when "Treasures"
+            when "Magic Items"
                 arr =[]
                 @party.heroes_array.length.times do
                     arr << ""
@@ -91,10 +91,10 @@ class Tavern
                 hero_instance = Menu.start(arr,@party.heroes_array,1,0,[],3)
                 owned_treasure = hero_instance.treasures
                 if owned_treasure.length == 0
-                    array = ["#{hero_instance.name} has no treasures."]
+                    array = ["#{hero_instance.name} has no magic items."]
                 else
                     array = owned_treasure.map{|treas| treas.name}
-                    array.unshift("#{hero_instance.name} has found these treasures:")
+                    array.unshift("#{hero_instance.name} has equipped the following magic items:")
                 end
                 display_treasures(array)
             when "Dismiss"
@@ -200,7 +200,7 @@ class Tavern
             8.times do |index|
                 index = display + index
                 if index < treasures.length
-                    treasure_log.write(treasures[index])
+                    treasure_log.write("#{treasures[index]} #{treasures[index].description}")
                 end
             end
             treasure_log.display_text
