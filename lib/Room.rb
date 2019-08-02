@@ -89,7 +89,7 @@ class Room
         monsters_position = []
         monsters_position << Monster.new_boss_monster
         CombatManager.new(party_instance,monsters_position,text_log)
-
+        Treasure.GivePartyTreasure(party_instance,@dungeon_depth+90,text_log)
     end
 
     def door_selection(party_instance,text_log)
