@@ -27,7 +27,7 @@ class ExplorationLoop
             values << "To Tavern"
             new_fork = false
             while new_fork == false
-                display
+                display("",fork_instance)
                 choice = Menu.start(choice_names,values,Curses.lines-6,0,descriptions)
                 if choice == "To Tavern"
                     Tavern.new(@party,@text_log)
@@ -117,13 +117,14 @@ class ExplorationLoop
         end
      end
 
-    def display(string="")
+    def display(string="",fork_instance = [])
         Curses.clear
         @party.standard_menu_display
             if string == "View Party"
                 display_adventurers(@party.heroes_array)
                 @text_log.display_text
             else 
+                fork_instance.display_doors
                 @text_log.display_text
             end
         Curses.setpos(0,76)

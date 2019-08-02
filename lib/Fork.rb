@@ -9,13 +9,14 @@ class Fork
         @rooms_in_fork = []
         generate_rooms
         @amount_of_rooms = @rooms_in_fork.length
+        @doors_array = generate_doors
     end
 
     def generate_rooms
         rooms = rand(2)+2
         if @dungeon_depth % 10 == 0
             @rooms_in_fork << Room.new(@dungeon_depth)
-            @room_labels << "Door 1"
+            @room_labels << "Passage"
         else
             rooms.times do |counter|
             @rooms_in_fork << Room.new(@dungeon_depth)
@@ -24,75 +25,101 @@ class Fork
         end
     end
 
-    def doors
-    boss_room = ["    ______     ",
-    "  ,-' ;  ! `-.  ",
-    " / :  !  :  . \ ",
-    "|_ ;  :  !  .  |",
-    ")| .  :  .  !  |",
-    "|/ .  :  .  _  |",
-    "|  :  :  ! (_) (",
-    "|  :  :  .     |",
-    ")_ !  ,  :  :  |",
-    "|| .  .  :  :  |",
-    "|/ .  :  :  .  |",
-    "|____;-----;___|"]
+    def get_door_appearance(room)
+        string = []
+        case room.room_type
+        when "monster_room"
+        string = ["     ______     ",
+        "  ,-' ;  ! `-.  ",
+        " / :  !  :  . \\ ",
+        "|_ ;  :  !  .  |",
+        ")| .  :  .  !  |",
+        "|/ .  :  .  _  |",
+        "|  :  :  ! (_) (",
+        "|  :  :  .     |",
+        ")_ !  ,  :  :  |",
+        "|| .  .  :  :  |",
+        "|/ .  :  :  .  |",
+        "|____;-----;___|"]
 
+        when "treasure_room"
+        string = ["_____~/()\\~_____",
+        "|   ___  ___   |",
+        "|  |   ||   |  |",
+        "|  |   ||   |  |",
+        "|  |___||___|  |",
+        "|  +========+  |",
+        "|   ___  ___ ()|",
+        "|  |   ||   | !|",
+        "|  |   ||   |  |",
+        "|  |   ||   |  |",
+        "|  |___||___|  |",
+        "|______________|"]
 
-    treasure_room = ["_____~/()\~_____",
-    "|   ___  ___   |",
-    "|  |   ||   |  |",
-    "|  |   ||   |  |",
-    "|  |___||___|  |",
-    "|  +========+  |",
-    "|   ___  ___ ()|",
-    "|  |   ||   | !|",
-    "|  |   ||   |  |",
-    "|  |   ||   |  |",
-    "|  |___||___|  |",
-    "|______________|"]
+        when "safe_room"
+        string =   [" ______________",
+                    "|  |  |  |  |  |",
+                    "|  |--------|  |",
+                    "|  | œwç ∂ß |  |",
+                    "|  |  ∂ßœƒ  |  |",
+                    "|  |--------| _|",
+                    "|  |  |  |  | U|",
+                    "|  |  |  |  |  |",
+                    "|  |  |  |  |  |",
+                    "|  |  |  |  |  |",
+                    "|  |  |  |  |  |",
+                    "|__|__|__|__|__|"]
 
-    safe_room = [" ______________",
-    "|  |  |  |  |  |",
-    "|  |  |  |  |  |",
-    "|  |  |  |  |  |",
-    "|  |  |  |  |  |",
-    "|  |  |  |  | _|",
-    "|  |  |  |  | U|",
-    "|  |  |  |  |  |",
-    "|  |  |  |  |  |",
-    "|  |  |  |  |  |",
-    "|  |  |  |  |  |",
-    "|__|__|__|__|__|"]
-
-
-    monster_room = ["        ____    ",
-    "     __/    \\   ",
-    "    /        \\  ",
-    "   |          \\ ",
-    "   \\          / ",
-    "   /         /  ",
-    " /           \\  ",
-    " \\            \\ ",
-    " /             \\",
-    "|              |",
-    "/             / ", 
-    "\\            /  "]
+        when "boss_room"
+        string =   ["        ____    ",
+        "     __/    \   ",
+        "    /        \  ",
+        "   |          \ ",
+        "   \\          / ",
+        "   /         /  ",
+        " /           \\  ",
+        " \\            \\ ",
+        " /             \\",
+        "|              |",
+        "/             / ", 
+        "\\            /  "]
+        end
     end
 
-    def draw_many_doors 
-        Curse.clear
-        draw_door(door_string,y,x)
-        draw_door(door_string,y,x)
-        draw_door(door_string,y,x)
+
+    def generate_doors
+        doors_array = @rooms_in_fork.map do |room|
+            get_door_appearance(room)
+        end
+        return doors_array
+    end
+
+    def display_doors
+        Curses.setpos(0,0)
+        Curses.addstr("Display doors: #{@doors_array.length}")
+        top = 7
+        left = 10
+        midleft = 30
+        mid = 50
+        midright = 70
+        right = 90
+        case @doors_array.length
+        when 1
+            draw_door(@doors_array[0],top,mid)
+        when 2
+            draw_door(@doors_array[0],top,midleft)
+            draw_door(@doors_array[1],top,midright)
+        when 3
+            draw_door(@doors_array[0],top,left)
+            draw_door(@doors_array[1],top,mid)
+            draw_door(@doors_array[2],top,right)
+        end
     end
 
     def draw_door(door_string,y,x)
-        Curses.setpos(y,x)
         door_string.length.times do |counter|
-            Curses.addstr(door_string[counter])
             Curses.setpos(y+counter,x)
+            Curses.addstr(door_string[counter])
         end
-        Curses.refresh
     end       
 end
