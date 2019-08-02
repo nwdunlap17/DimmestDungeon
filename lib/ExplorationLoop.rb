@@ -45,21 +45,62 @@ class ExplorationLoop
         not_done = true
         while not_done == true
             display("View Party")
-            input = Menu.start(["Use Potion","Back"],["Dismiss","Back"],Curses.lines-6,1)
+            input = Menu.start(["Use Potion","Back"],["Use Potion","Back"],Curses.lines-6,1)
             case input
             when "Use Potion"
-                potion = Menu.start(["Potion","Elixir"],["Potion","Elixir"],1,0,["Restores half HP","Restores half MP"],3)
+                potion = Menu.start(["Potion","Elixir"],["Potion","Elixir"],Curses.lines-11,0,["Restores half HP.    Potions: #{@party.potions}" ,"Restores half MP.    Elixirs: #{@party.elixirs}"])
                 case potion
                 when "Potion"
-                    #addition of potion
+                    if @party.potions > 0
+                    arr =[]
+                        @party.heroes_array.length.times do
+                        arr << ""
+                        end
+                    hero_instance = Menu.start(arr,@party.heroes_array,1,0,[],3)
+                    give_potion(hero_instance, Action.use_potion)
+                    @party.potions -= 1
+                    else 
+                        @text_log.write("Potion not used. Insufficient amount of potions in inventory.")
+                    end
                 when "Elixir"
-                    #addition of elixir
+                    if @party.elixirs > 0
+                    arr =[]
+                        @party.heroes_array.length.times do
+                        arr << ""
+                        end
+                    hero_instance = Menu.start(arr,@party.heroes_array,1,0,[],3)
+                    give_potion(hero_instance, Action.use_elixir)
+                    @party.elixirs -= 1
+                    else 
+                        @text_log.write("Elixir not used. Insufficient amount of potions in inventory.")
+                    end
                 end
             when "Back"
                 not_done = false
             end
         end
     end
+
+    def give_potion(target, action)
+        heal_amount = (target.max_HP * action.heal_value).round
+        target.current_HP += heal_amount
+        restore_amount = (target.max_MP * action.mp_restore).round
+        target.current_MP += restore_amount
+        if target.current_HP > target.max_HP
+            heal_amount -= (target.current_HP - target.max_HP)
+            target.current_HP = target.max_HP
+        end
+        if target.current_MP > target.max_MP
+            restore_amount -= (target.current_MP - target.max_MP)
+            target.current_MP = target.max_MP
+        end
+        if heal_amount > 0
+            @text_log.write("You used a health potion on #{target.name}. They healed #{heal_amount} HP.")
+        end
+        if restore_amount > 0
+            @text_log.write("You used an elixir on #{target.name}. They restored #{restore_amount} MP.")
+        end
+     end
 
     def display(string="")
         Curses.clear
