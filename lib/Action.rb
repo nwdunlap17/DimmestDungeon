@@ -10,8 +10,8 @@ class Action < ActiveRecord::Base
     def Action.use_potion
         return Action.make_buff("none","Potion",0,"one",0,0,0.5,0,0,"Restores half of max HP. You have ")
     end
-    def Action.use_elixer
-        return Action.make_buff("none","Elixer",0,"one",0,0,0,0.5,0,"Restores half of max MP. You have ")
+    def Action.use_elixir
+        return Action.make_buff("none","Elixir",0,"one",0,0,0,0.5,0,"Restores half of max MP. You have ")
     end
 
     def Action.make_attack(job,name,mp_cost,targets_all,damage_multiplier,stun,description)
