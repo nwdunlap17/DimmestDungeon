@@ -200,7 +200,7 @@ class Tavern
             8.times do |index|
                 index = display + index
                 if index < treasures.length
-                    treasure_log.write("#{treasures[index]} #{treasures[index].description}")
+                    treasure_log.write("#{treasures[index]}")
                 end
             end
             treasure_log.display_text
