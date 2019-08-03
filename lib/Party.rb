@@ -2,7 +2,7 @@ class Party
     attr_accessor :heroes_array
     attr_accessor :money, :potions, :elixirs, :hipotions, :hielixirs
     def initialize
-        @money = 10
+        @money = 25
         @potions = 1
         @elixirs = 1
         @heroes_array = []

@@ -59,6 +59,9 @@ class Menu
         @num_choices.times do |i|
             Curses.setpos(@y+(i*@line_multiplier),@x)
             Curses.addstr("    #{@choices[i]}")
+            #Curses.addstr("    ")
+            #Curses.setpos(@y+(i*@line_multiplier),@x+4)
+            #Curses.addstr("#{@choices[i]}")
         end
         Curses.setpos(@y+(@index*@line_multiplier),@x)
         Curses.addstr("-->")

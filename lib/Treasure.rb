@@ -106,6 +106,7 @@ class Treasure < ActiveRecord::Base
         treas.rarity = "uncommon"
         treas.potions = potquantity
         treas.elixirs = elixirquantity
+        treas.description = ""
         treas.save
     end
 

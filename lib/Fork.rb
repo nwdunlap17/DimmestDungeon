@@ -14,10 +14,13 @@ class Fork
 
     def generate_rooms
         rooms = rand(2)+2
-        if @dungeon_depth % 10 == 0
+        if @dungeon_depth == 31
             @rooms_in_fork << Room.new(@dungeon_depth)
-            @room_labels << "Passage"
-        else
+            @room_labels << "The End"
+        elsif @dungeon_depth % 10 == 0
+                @rooms_in_fork << Room.new(@dungeon_depth)
+                @room_labels << "Passage"
+            else
             rooms.times do |counter|
             @rooms_in_fork << Room.new(@dungeon_depth)
             @room_labels << "Door #{counter+1}"
@@ -95,8 +98,6 @@ class Fork
     end
 
     def display_doors
-        Curses.setpos(0,0)
-        Curses.addstr("Display doors: #{@doors_array.length}")
         top = 7
         left = 10
         midleft = 30

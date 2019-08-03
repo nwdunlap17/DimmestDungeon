@@ -1,5 +1,5 @@
 class ExplorationLoop
-    attr_accessor :depth, :text_log
+    attr_accessor :depth, :text_log, :party
     def initialize
         @text_log = Text_Log.new
         @party = Party.new
@@ -39,7 +39,7 @@ class ExplorationLoop
                     display(choice)
                     view_adventurer_loop
                 else
-                    choice.door_selection(@party,@text_log)
+                    choice.door_selection(self)
                     @depth += 1
                     fork_instance = Fork.new(@depth)
                     new_fork = true
@@ -155,6 +155,40 @@ class ExplorationLoop
             Curses.addstr"#{array[counter].skill1.action_name}: #{array[counter].skill1.description}"
             Curses.setpos(start_display_line+counter*3+2,10)
             Curses.addstr"#{array[counter].skill2.action_name}: #{array[counter].skill2.description}"
+        end
+    end
+
+    def final_room
+        @text_log = Text_Log
+        @text_log.lines_of_text[]=("Having defeated every obstacle that stands in your way, you stand triumphant.")
+        sleep(0.4)
+        display("",fork_instance)
+        @text_log.lines_of_text[]=("Your weary party breaths a collective sigh of relief.")
+        sleep(0.4)
+        display("",fork_instance)
+        @text_log.lines_of_text[]=("Suddenly, two figures appear before you.")
+        sleep(0.4)
+        display("",fork_instance)
+        @text_log.lines_of_text[]=("\"Hey! We're the game developers! Thank you so much for playing our game.\" says one")
+        sleep(0.4)
+        display("",fork_instance)
+        @text_log.lines_of_text[]=("\"We really hope that you enjoyed it!\" says the other")
+        sleep(0.4)
+        display("",fork_instance)
+        @text_log.lines_of_text[]=("\"Now we give you a choice.\"")
+        sleep(0.4)
+        display("",fork_instance)
+        @text_log.lines_of_text[]=("\"Do you wanna do the secret developer fight?\"")
+            sleep()
+        display("",fork_instance)
+        choice = Menu.start(["No","Yes"],["No","Yes"],Curses.lines-6,0,["Congratulations on your victory!","You won't like what comes next"])
+        case choice
+        when "Yes"
+            monsters_position << Monster.final_boss(0)
+            monsters_position << Monster.final_boss(1)
+            CombatManager.new(party_instance,monsters_position,text_log,@dungeon_depth)
+            
+        when "No"
         end
     end
 end
