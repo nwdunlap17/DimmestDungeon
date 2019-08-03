@@ -11,7 +11,9 @@ class Room
     end
 
     def set_type
-        if @dungeon_depth % 10 != 0
+        if @dungeon_depth == 31
+            final_room
+        elsif @dungeon_depth % 10 != 0
             room_choice = rand(5)
             case room_choice
                 when 0
@@ -52,7 +54,12 @@ class Room
         monsters_position = []
         length = Monster.all.length
         amount_slimes.times do
-            monsters_position << Monster.new_monster
+            power = 2 + (@dungeon_depth/5)
+            range = 1
+            if power > 9
+                power == 9
+            end
+            monsters_position << Monster.new_monster(power,range)
         end
         CombatManager.new(party_instance,monsters_position,text_log,@dungeon_depth)
         if rand(3) == 0
@@ -87,12 +94,23 @@ class Room
     
     def enter_boss_room(party_instance,text_log)
         monsters_position = []
-        monsters_position << Monster.new_boss_monster
+        monsters_position << Monster.new_boss_monster(4+(@dungeon_depth/5))
         CombatManager.new(party_instance,monsters_position,text_log,@dungeon_depth)
         Treasure.GivePartyTreasure(party_instance,@dungeon_depth+90,text_log)
     end
 
-    def door_selection(party_instance,text_log)
+    def final_room 
+        @door_appearance = "safe_room"
+        @description = "Your trials over, victory is at hand."
+        @room_type = "final_room"
+    end
+    def enter_final_room(exploreloop)
+        exploreloop.final_room
+    end
+
+    def door_selection(exploreloop)
+        party_instance = exploreloop.party
+        text_log = exploreloop.text_log
         case @room_type 
             when "treasure_room"
                 enter_treasure_room(party_instance,text_log)
@@ -102,6 +120,8 @@ class Room
                 enter_safe_room(party_instance,text_log)
             when "boss_room"
                 enter_boss_room(party_instance,text_log) 
+            when "final_room"
+                enter_final_room(exploreloop) 
         end
     end  
 end

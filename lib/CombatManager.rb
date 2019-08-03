@@ -113,12 +113,13 @@ class CombatManager
         @party.standard_menu_display
         display_adventurers(character_picked)
         @monsters_position.length.times do  |index|
-            Curses.setpos(index,9)
-            Curses.addstr " #{monsters_position[index].name} HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP}"
+            stun_symbol = " "
             if @monsters_position[index].stunned
-                Curses.setpos(index,9)
-                Curses.addstr "@"
+                stun_symbol = "@"
             end
+            Curses.setpos(index,9)
+            Curses.addstr " #{monsters_position[index].name}" + stun_symbol + " HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP}"
+            
         end
         @text_log.display_text
         Curses.setpos(0,76)

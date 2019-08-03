@@ -6,7 +6,7 @@ class Adventurer < ActiveRecord::Base
     include Combatant
 
     def self.get_random_adventurer(heroes_array)
-        if Adventurer.all.length > 10
+        if Adventurer.all.length > 25
             acceptable = false
             chosen_hero = nil
             while acceptable == false

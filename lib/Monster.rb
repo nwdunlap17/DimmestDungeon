@@ -29,10 +29,12 @@ class Monster  < ActiveRecord::Base
             level = minion_hash["cost"]
             description = minion_hash["flavor"]
             Monster.create(name: name, description: description, atk: attack, defense: 0, max_HP: health, level: level)
+            Monster.create(name: "Katana", description: "She's just happy to be here.", atk: 6, defense: 0, max_HP: 70, level: 0)
+            Monster.create(name: "Nick", description: "It'll be a shame to kill you", atk: 4, defense: 0, max_HP: 120, level: 0)
         end
     end
 
-    def self.new_boss_monster
+    def self.new_boss_monster(power = 6)
         new_monster = Monster.where(level:6).sample
         new_monster.atk = new_monster.atk * 3
         new_monster.max_HP = new_monster.max_HP * 10
@@ -40,8 +42,24 @@ class Monster  < ActiveRecord::Base
         new_monster.get_ready_for_combat
         return new_monster
     end
+    
+    def self.final_boss(choice)
+        names = ""
+    if choice == 0
+        names = "Katana"
+    else 
+        names = "Nick"
+    end
+    new_monster = Monster.find_by(name:names)
+    new_monster.atk = new_monster.atk * 3
+    new_monster.max_HP = new_monster.max_HP * 10
+    new_monster.is_boss = true
+    new_monster.get_ready_for_combat
+    return new_monster
+    end
 
-    def self.new_monster
+    def self.new_monster(power = 3, range = 0)
+        power = power + rand(range)
         new_monster = Monster.where(level:3).sample
         new_monster.atk = new_monster.atk * 2
         new_monster.max_HP = new_monster.max_HP * 5

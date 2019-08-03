@@ -93,7 +93,7 @@ class Tavern
                 if owned_treasure.length == 0
                     array = ["#{hero_instance.name} has no magic items."]
                 else
-                    array = owned_treasure.map{|treas| treas.name}
+                    array = owned_treasure.map{|treas| "#{treas.name}: #{treas.description}"}
                     array.unshift("#{hero_instance.name} has equipped the following magic items:")
                 end
                 display_treasures(array)
@@ -200,7 +200,7 @@ class Tavern
             8.times do |index|
                 index = display + index
                 if index < treasures.length
-                    treasure_log.write("#{treasures[index]} #{treasures[index].description}")
+                    treasure_log.write("#{treasures[index]}")
                 end
             end
             treasure_log.display_text
