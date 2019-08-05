@@ -87,7 +87,7 @@ class Action < ActiveRecord::Base
     def Action.Load_Action_List
         skill = Action.make_attack("Mage","Fireball",2,true,1,0,"Hits all enemies")
         skill.save
-        skill = Action.make_attack("Mage","Death",2,false,4,0,"A powerful attack")
+        skill = Action.make_attack("Mage","Death",3,false,4,0,"An exteremely powerful attack")
         skill.save
         skill = Action.make_attack("Mage","Flash",2,true,0,0.4,"May stun multiple enemies")
         skill.save

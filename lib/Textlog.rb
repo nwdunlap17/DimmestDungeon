@@ -1,5 +1,5 @@
 class Text_Log
-    
+    attr_accessor :lines_of_Text
     def initialize(max_size = 9)
         @lines_of_Text = []
         @relevant_lines = 0

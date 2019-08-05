@@ -25,17 +25,25 @@ class Menu
         choice = nil
         while !!!choice
             display
+            Curses.stdscr.keypad = true
             input = Curses.getch.to_s
-            if "SWD".include?(input)
+            if "SWDJK".include?(input)
                 input = input.downcase
             end
+            if input == "s" || input == "k" 
+                input = "down"
+            elsif input == "w" || input == "j"
+                input = "up"
+            elsif input == "d"
+                input = "d"
+            end
             case input
-            when "s"#Curses::Key::DOWN
+            when "down"#Curses::Key::DOWN
                 @index += 1
                 if @index == @num_choices
                     @index = 0
                 end
-            when "w"#Curses::Key::UP
+            when "up" #Curses::Key::UP
                 @index -= 1
                 if @index == -1
                     @index = @num_choices-1
@@ -51,12 +59,15 @@ class Menu
         @num_choices.times do |i|
             Curses.setpos(@y+(i*@line_multiplier),@x)
             Curses.addstr("    #{@choices[i]}")
+            #Curses.addstr("    ")
+            #Curses.setpos(@y+(i*@line_multiplier),@x+4)
+            #Curses.addstr("#{@choices[i]}")
         end
         Curses.setpos(@y+(@index*@line_multiplier),@x)
         Curses.addstr("-->")
         if @descriptions != []
             Curses.setpos(Curses.lines-6,20)
-            Curses.addstr " "*(Curses.cols-20)
+            Curses.addstr" "*(Curses.cols-20)
             Curses.setpos(Curses.lines-6,20)
             Curses.addstr @descriptions[@index]
         end

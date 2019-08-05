@@ -1,5 +1,5 @@
 class ExplorationLoop
-    attr_accessor :depth, :text_log
+    attr_accessor :depth, :text_log, :party
     def initialize
         @text_log = Text_Log.new
         @party = Party.new
@@ -8,36 +8,43 @@ class ExplorationLoop
     end
 
     def select_room
+        fork_instance = Fork.new(@depth)
+        @text_log.write("You wake up in darkness alongside equally confused others.")
+        @text_log.write("Some are crying, others still laying unconscious.")
+        @text_log.write("After some time, a #{@party.heroes_array[1].job} named #{@party.heroes_array[1].name} suggests you band together.")
         while true
-            if @depth == 1
-                @text_log.write("You enter the dungeon...")
-            end
-            fork_instance = Fork.new(@depth)
             choice_names = fork_instance.room_labels 
             values = fork_instance.rooms_in_fork
             descriptions = []
             fork_instance.rooms_in_fork.each do |room|
                 descriptions << room.description
             end
-            descriptions << "View Party"
+            descriptions << "Take a moment to converse with your fellow adventurers."
             descriptions << "Flee to safety"
             choice_names << "View Party"
             choice_names << "To Tavern"
             values << "View Party"
             values << "To Tavern"
-            display
-            # choice = fork_instance.rooms_in_fork[0]
-            choice = Menu.start(choice_names,values,Curses.lines-6,0,descriptions)
-            if choice == "To Tavern"
-                @depth = 0
-                Tavern.new(@party,@text_log)
-            elsif choice == "View Party"
-                display(choice)
-                view_adventurer_loop
-            else
-            choice.door_selection(@party,@text_log)
+            new_fork = false
+            while new_fork == false
+                display("",fork_instance)
+                choice = Menu.start(choice_names,values,Curses.lines-6,0,descriptions)
+                if choice == "To Tavern"
+                    Tavern.new(@party,@text_log)
+                    @text_log.write("You enter the dungeon...")
+                    @depth = 1
+                    fork_instance = Fork.new(@depth)
+                    new_fork = true
+                elsif choice == "View Party"
+                    display(choice)
+                    view_adventurer_loop
+                else
+                    choice.door_selection(self)
+                    @depth += 1
+                    fork_instance = Fork.new(@depth)
+                    new_fork = true
+                end
             end
-            @depth += 1
         end
     end
 
@@ -45,7 +52,7 @@ class ExplorationLoop
         not_done = true
         while not_done == true
             display("View Party")
-            input = Menu.start(["Use Potion","Back"],["Use Potion","Back"],Curses.lines-6,1)
+            input = Menu.start(["Use Potion","Back"],["Use Potion","Back"],Curses.lines-6,1,["Rejuvenate your adventurers with what is simply, steroids in a bottle.","Finished viewing? Back to the dungeon."])
             case input
             when "Use Potion"
                 potion = Menu.start(["Potion","Elixir"],["Potion","Elixir"],Curses.lines-11,0,["Restores half HP.    Potions: #{@party.potions}" ,"Restores half MP.    Elixirs: #{@party.elixirs}"])
@@ -57,8 +64,12 @@ class ExplorationLoop
                         arr << ""
                         end
                     hero_instance = Menu.start(arr,@party.heroes_array,1,0,[],3)
-                    give_potion(hero_instance, Action.use_potion)
-                    @party.potions -= 1
+                        if hero_instance.current_HP == hero_instance.max_HP
+                            @text_log.write("#{hero_instance.name} refuses to drink the vile solution as they are at full health.")
+                        else
+                            give_potion(hero_instance, Action.use_potion)
+                            @party.potions -= 1
+                        end
                     else 
                         @text_log.write("Potion not used. Insufficient amount of potions in inventory.")
                     end
@@ -69,8 +80,12 @@ class ExplorationLoop
                         arr << ""
                         end
                     hero_instance = Menu.start(arr,@party.heroes_array,1,0,[],3)
-                    give_potion(hero_instance, Action.use_elixir)
-                    @party.elixirs -= 1
+                        if hero_instance.current_MP == hero_instance.max_MP
+                            @text_log.write("#{hero_instance.name} refuses to drink the vile solution as they are at full mana.")
+                        else
+                        give_potion(hero_instance, Action.use_elixir)
+                        @party.elixirs -= 1
+                        end
                     else 
                         @text_log.write("Elixir not used. Insufficient amount of potions in inventory.")
                     end
@@ -95,19 +110,21 @@ class ExplorationLoop
             target.current_MP = target.max_MP
         end
         if heal_amount > 0
-            @text_log.write("You used a health potion on #{target.name}. They healed #{heal_amount} HP.")
+            @text_log.write("#{target.name} gratefully accepts the potion. They healed #{heal_amount} HP.")
         end
         if restore_amount > 0
-            @text_log.write("You used an elixir on #{target.name}. They restored #{restore_amount} MP.")
+            @text_log.write("#{target.name} gratefully accepts the elixir. They restored #{restore_amount} MP.")
         end
      end
 
-    def display(string="")
+    def display(string="",fork_instance = [])
         Curses.clear
         @party.standard_menu_display
             if string == "View Party"
                 display_adventurers(@party.heroes_array)
+                @text_log.display_text
             else 
+                fork_instance.display_doors
                 @text_log.display_text
             end
         Curses.setpos(0,76)
@@ -138,6 +155,40 @@ class ExplorationLoop
             Curses.addstr"#{array[counter].skill1.action_name}: #{array[counter].skill1.description}"
             Curses.setpos(start_display_line+counter*3+2,10)
             Curses.addstr"#{array[counter].skill2.action_name}: #{array[counter].skill2.description}"
+        end
+    end
+
+    def final_room
+        @text_log = Text_Log
+        @text_log.lines_of_text[]=("Having defeated every obstacle that stands in your way, you stand triumphant.")
+        sleep(0.4)
+        display("",fork_instance)
+        @text_log.lines_of_text[]=("Your weary party breaths a collective sigh of relief.")
+        sleep(0.4)
+        display("",fork_instance)
+        @text_log.lines_of_text[]=("Suddenly, two figures appear before you.")
+        sleep(0.4)
+        display("",fork_instance)
+        @text_log.lines_of_text[]=("\"Hey! We're the game developers! Thank you so much for playing our game.\" says one")
+        sleep(0.4)
+        display("",fork_instance)
+        @text_log.lines_of_text[]=("\"We really hope that you enjoyed it!\" says the other")
+        sleep(0.4)
+        display("",fork_instance)
+        @text_log.lines_of_text[]=("\"Now we give you a choice.\"")
+        sleep(0.4)
+        display("",fork_instance)
+        @text_log.lines_of_text[]=("\"Do you wanna do the secret developer fight?\"")
+            sleep()
+        display("",fork_instance)
+        choice = Menu.start(["No","Yes"],["No","Yes"],Curses.lines-6,0,["Congratulations on your victory!","You won't like what comes next"])
+        case choice
+        when "Yes"
+            monsters_position << Monster.final_boss(0)
+            monsters_position << Monster.final_boss(1)
+            CombatManager.new(party_instance,monsters_position,text_log,@dungeon_depth)
+            
+        when "No"
         end
     end
 end

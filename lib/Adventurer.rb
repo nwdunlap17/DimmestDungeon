@@ -5,10 +5,34 @@ class Adventurer < ActiveRecord::Base
 
     include Combatant
 
+    def self.get_random_adventurer(heroes_array)
+        if Adventurer.all.length > 25
+            acceptable = false
+            chosen_hero = nil
+            while acceptable == false
+                acceptable = true 
+                chosen_hero = Adventurer.all.sample
+                heroes_array.each do |hero|
+                    if chosen_hero == hero
+                        acceptable = false
+                    end
+                end
+            end
+            chosen_hero.get_ready_for_combat
+            chosen_hero.full_heal
+            return chosen_hero
+        else
+            return Adventurer.generate_new_adventurer_with_job
+        end
+    end
 
     def get_ready_for_combat   
-        super
-        current_MP = max_MP
+        self.atk_multi = 1
+        self.def_multi = 1
+        self.current_HP = max_HP
+        self.current_MP = max_MP
+        self.skill1 = Action.find_by(id: skill1_id)
+        self.skill2 = Action.find_by(id: skill2_id)
     end
 
     def full_heal
@@ -84,6 +108,7 @@ class Adventurer < ActiveRecord::Base
         hero.skill2_id = skill_array[rand2].id
         return hero
     end
+
     def self.make_cleric
         hero = Adventurer.manual_generation("",2,4,50,15)
         hero.job = "Cleric"
@@ -128,6 +153,14 @@ class Adventurer < ActiveRecord::Base
         when 3
             self.max_MP += 2
             self.current_MP +=2
+        end
+    end
+
+    def delete
+        super
+        ownerships = Ownership.where(adventurer_id: self.id)
+        ownerships.each do |ownership|
+            ownership.delete
         end
     end
 end

@@ -1,7 +1,10 @@
 
 require_relative('environment.rb')
 # binding.pry
+# ExplorationLoop.new
+Curses.stdscr.keypad = true
+ActiveRecord::Base.logger.level = 1
+Curses.curs_set(0)
 
-Ownership.destroy_all
-Adventurer.destroy_all
+start_screen
 ExplorationLoop.new

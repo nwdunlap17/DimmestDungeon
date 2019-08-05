@@ -1,10 +1,11 @@
 class CombatManager
     attr_accessor :heroes_position, :monsters_position, :combat_is_over, :heroes_alive, :monsters_alive, :heroes_aggro
 
-    def initialize(party,monsters_array,textlog)
+    def initialize(party,monsters_array,textlog,depth)
         #index 1-2 are front, 3-4 back
         #each array position should contain an object instance of representative thing
         @text_log = textlog
+        @depth = depth
         @combat_is_over = false
         @heroes_alive = true
         @party = party
@@ -17,6 +18,9 @@ class CombatManager
     end
 
     def battle_sequence
+        @heroes_position.each do |hero|
+            hero.reset_buffs
+        end
         @monsters_position.each do |monster|
             @text_log.write("A #{monster.name} appeared!")
         end
@@ -109,14 +113,17 @@ class CombatManager
         @party.standard_menu_display
         display_adventurers(character_picked)
         @monsters_position.length.times do  |index|
-            Curses.setpos(index,9)
-            Curses.addstr " #{monsters_position[index].name} HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP}"
+            stun_symbol = " "
             if @monsters_position[index].stunned
-                Curses.setpos(index,9)
-                Curses.addstr "@"
+                stun_symbol = "@"
             end
+            Curses.setpos(index,9)
+            Curses.addstr " #{monsters_position[index].name}" + stun_symbol + " HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP}"
+            
         end
         @text_log.display_text
+        Curses.setpos(0,76)
+        Curses.addstr "Depth: #{@depth}"
         Curses.refresh
     end
 
@@ -168,10 +175,11 @@ class CombatManager
     def check_for_dead
         self.heroes_position.each do |hero|
             if hero.alive? == false
-                @text_log.write("#{hero.name} has died.")
+                eulogy_quotes = ["May they rest in peace.","Who will be next, I wonder?","From dust, to dust."]
+                @text_log.write("#{hero.name} has died. #{eulogy_quotes.sample}")
                 heroes_position.delete(hero)
                 heroes_aggro.delete(hero)
-                @text_log.write("After the math, it seems that #{hero.name} has perished.")
+                hero.delete
                 if heroes_position.empty? == true
                     @heroes_alive = false
                     @combat_is_over = true

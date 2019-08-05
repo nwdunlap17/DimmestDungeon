@@ -40,6 +40,7 @@ class Tavern
             when "To Dungeon"
                 if @party.heroes_array.length >= 1
                     still_in_town = false
+                    @text_log.write("You enter the dungeon...")
                 else 
                     @text_log.write("Foolish of you, to wish to journey without adventurers!")
                 end
@@ -80,9 +81,9 @@ class Tavern
         not_done = true
         while not_done == true
             display("View Party")
-            input = Menu.start(["Treasures","Dismiss","Back"],["Treasures","Dismiss","Back"],Curses.lines-6,1)
+            input = Menu.start(["Magic Items","Dismiss","Back"],["Magic Items","Dismiss","Back"],Curses.lines-6,1,["View equipped items","Not very fond of them, yea? Send them on their way."])
             case input
-            when "Treasures"
+            when "Magic Items"
                 arr =[]
                 @party.heroes_array.length.times do
                     arr << ""
@@ -90,10 +91,10 @@ class Tavern
                 hero_instance = Menu.start(arr,@party.heroes_array,1,0,[],3)
                 owned_treasure = hero_instance.treasures
                 if owned_treasure.length == 0
-                    array = ["#{hero_instance.name} has no treasures."]
+                    array = ["#{hero_instance.name} has no magic items."]
                 else
-                    array = owned_treasure.map{|treas| treas.name}
-                    array.unshift("#{hero_instance.name} has found these treasures:")
+                    array = owned_treasure.map{|treas| "#{treas.name}: #{treas.description}"}
+                    array.unshift("#{hero_instance.name} has equipped the following magic items:")
                 end
                 display_treasures(array)
             when "Dismiss"
@@ -168,13 +169,22 @@ class Tavern
     end
 
     def fill_carousel
+        already_in_use = []
+        @party.heroes_array.each do |hero|
+            already_in_use << hero
+        end
         4.times do 
-           @carousel <<  Adventurer.generate_new_adventurer_with_job
+           hero = Adventurer.get_random_adventurer(already_in_use)
+           @carousel <<  hero
+           already_in_use << hero
         end
     end
 
     def refresh_carousel
         if  @party.money >= 5
+            carousel.each do |adventurer|
+                adventurer.delete
+            end
             @party.money = @party.money - 5
             @carousel = []
             fill_carousel
@@ -190,7 +200,7 @@ class Tavern
             8.times do |index|
                 index = display + index
                 if index < treasures.length
-                    treasure_log.write(treasures[index])
+                    treasure_log.write("#{treasures[index]}")
                 end
             end
             treasure_log.display_text

@@ -106,6 +106,7 @@ class Treasure < ActiveRecord::Base
         treas.rarity = "uncommon"
         treas.potions = potquantity
         treas.elixirs = elixirquantity
+        treas.description = ""
         treas.save
     end
 
@@ -142,9 +143,6 @@ class Treasure < ActiveRecord::Base
         party.money += total_worth
         text_log.write("You found a #{given_treasure.name}!")
         text_log.write("It's worth #{total_worth} coins.")
-        party.heroes_array.each do |hero|
-            Ownership.create(adventurer_id: hero.id, treasure_id: given_treasure.id)
-        end
     end
     def self.give_potion_to_party(party,given_treasure,text_log)
         if given_treasure.potions > 0
