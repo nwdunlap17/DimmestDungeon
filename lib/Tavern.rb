@@ -81,7 +81,7 @@ class Tavern
         not_done = true
         while not_done == true
             display("View Party")
-            input = Menu.start(["Magic Items","Dismiss","Back"],["Magic Items","Dismiss","Back"],Curses.lines-6,1,["View equipped items","Not very fond of them, yea? Send them on their way."])
+            input = Menu.start(["Magic Items","Dismiss","Back"],["Magic Items","Dismiss","Back"],Curses.lines-6,1,["View equipped items","Not very fond of them, yea? Send them on their way.","Let them back to their drinks."])
             case input
             when "Magic Items"
                 arr =[]
@@ -183,7 +183,9 @@ class Tavern
     def refresh_carousel
         if  @party.money >= 5
             carousel.each do |adventurer|
-                adventurer.delete
+                if rand(3) == 0
+                    adventurer.delete
+                end
             end
             @party.money = @party.money - 5
             @carousel = []

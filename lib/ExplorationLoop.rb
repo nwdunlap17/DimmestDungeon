@@ -3,20 +3,20 @@ class ExplorationLoop
     def initialize
         @text_log = Text_Log.new
         @party = Party.new
-        @depth = 1
+        @depth = 10
         select_room
     end
 
     def select_room
-        fork_instance = Fork.new(@depth)
+        @fork_instance = Fork.new(@depth)
         @text_log.write("You wake up in darkness alongside equally confused others.")
         @text_log.write("Some are crying, others still laying unconscious.")
         @text_log.write("After some time, a #{@party.heroes_array[1].job} named #{@party.heroes_array[1].name} suggests you band together.")
         while true
-            choice_names = fork_instance.room_labels 
-            values = fork_instance.rooms_in_fork
+            choice_names = @fork_instance.room_labels 
+            values = @fork_instance.rooms_in_fork
             descriptions = []
-            fork_instance.rooms_in_fork.each do |room|
+            @fork_instance.rooms_in_fork.each do |room|
                 descriptions << room.description
             end
             descriptions << "Take a moment to converse with your fellow adventurers."
@@ -27,13 +27,13 @@ class ExplorationLoop
             values << "To Tavern"
             new_fork = false
             while new_fork == false
-                display("",fork_instance)
+                display("")
                 choice = Menu.start(choice_names,values,Curses.lines-6,0,descriptions)
                 if choice == "To Tavern"
                     Tavern.new(@party,@text_log)
                     @text_log.write("You enter the dungeon...")
                     @depth = 1
-                    fork_instance = Fork.new(@depth)
+                    @fork_instance = Fork.new(@depth)
                     new_fork = true
                 elsif choice == "View Party"
                     display(choice)
@@ -41,7 +41,7 @@ class ExplorationLoop
                 else
                     choice.door_selection(self)
                     @depth += 1
-                    fork_instance = Fork.new(@depth)
+                    @fork_instance = Fork.new(@depth)
                     new_fork = true
                 end
             end
@@ -52,7 +52,7 @@ class ExplorationLoop
         not_done = true
         while not_done == true
             display("View Party")
-            input = Menu.start(["Use Potion","Back"],["Use Potion","Back"],Curses.lines-6,1,["Rejuvenate your adventurers with what is simply, steroids in a bottle.","Finished viewing? Back to the dungeon."])
+            input = Menu.start(["Use Potion","Back"],["Use Potion","Back"],Curses.lines-6,1,["It's like a doctor in a bottle!","Finished viewing? Back to the dungeon."])
             case input
             when "Use Potion"
                 potion = Menu.start(["Potion","Elixir"],["Potion","Elixir"],Curses.lines-11,0,["Restores half HP.    Potions: #{@party.potions}" ,"Restores half MP.    Elixirs: #{@party.elixirs}"])
@@ -117,14 +117,16 @@ class ExplorationLoop
         end
      end
 
-    def display(string="",fork_instance = [])
+    def display(string="")
         Curses.clear
         @party.standard_menu_display
             if string == "View Party"
                 display_adventurers(@party.heroes_array)
                 @text_log.display_text
-            else 
-                fork_instance.display_doors
+            elsif string == "cutscene"
+                @text_log.display_text
+            else
+                @fork_instance.display_doors
                 @text_log.display_text
             end
         Curses.setpos(0,76)
@@ -159,34 +161,37 @@ class ExplorationLoop
     end
 
     def final_room
-        @text_log = Text_Log
-        @text_log.lines_of_text[]=("Having defeated every obstacle that stands in your way, you stand triumphant.")
-        sleep(0.4)
-        display("",fork_instance)
-        @text_log.lines_of_text[]=("Your weary party breaths a collective sigh of relief.")
-        sleep(0.4)
-        display("",fork_instance)
-        @text_log.lines_of_text[]=("Suddenly, two figures appear before you.")
-        sleep(0.4)
-        display("",fork_instance)
-        @text_log.lines_of_text[]=("\"Hey! We're the game developers! Thank you so much for playing our game.\" says one")
-        sleep(0.4)
-        display("",fork_instance)
-        @text_log.lines_of_text[]=("\"We really hope that you enjoyed it!\" says the other")
-        sleep(0.4)
-        display("",fork_instance)
-        @text_log.lines_of_text[]=("\"Now we give you a choice.\"")
-        sleep(0.4)
-        display("",fork_instance)
-        @text_log.lines_of_text[]=("\"Do you wanna do the secret developer fight?\"")
-            sleep()
-        display("",fork_instance)
+        delay = 1.3
+        @text_log = Text_Log.new
+        @text_log.lines_of_Text[6]=("Having defeated every obstacle that stands in your way, you stand triumphant.")
+        sleep(delay)
+        display("cutscene")
+        @text_log.lines_of_Text[5]=("Your weary party breaths a collective sigh of relief.")
+        sleep(delay)
+        display("cutscene")
+        @text_log.lines_of_Text[4]=("Suddenly, two figures appear before you.")
+        sleep(delay)
+        display("cutscene")
+        @text_log.lines_of_Text[3]=("\"Hey! We're the game developers! Thank you so much for playing our game.\" says one")
+        sleep(delay)
+        display("cutscene")
+        @text_log.lines_of_Text[2]=("\"We really hope that you enjoyed it!\" says the other")
+        sleep(delay)
+        display("cutscene")
+        @text_log.lines_of_Text[1]=("\"Now we give you a choice.\"")
+        sleep(delay)
+        display("cutscene")
+        @text_log.lines_of_Text[0]=("\"Do you wanna do the secret developer fight?\"")
+        sleep(delay)
+        display("cutscene")
+        sleep(delay)
         choice = Menu.start(["No","Yes"],["No","Yes"],Curses.lines-6,0,["Congratulations on your victory!","You won't like what comes next"])
         case choice
         when "Yes"
+            monsters_position = []
             monsters_position << Monster.final_boss(0)
             monsters_position << Monster.final_boss(1)
-            CombatManager.new(party_instance,monsters_position,text_log,@dungeon_depth)
+            CombatManager.new(@party,monsters_position,@text_log,31)
             
         when "No"
         end

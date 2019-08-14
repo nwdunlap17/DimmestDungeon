@@ -1,5 +1,6 @@
 
 require_relative('environment.rb')
+# ExplorationLoop.new
 # binding.pry
 # ExplorationLoop.new
 Curses.stdscr.keypad = true

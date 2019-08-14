@@ -29,7 +29,7 @@ class Room
     end
 
     def treasure_room
-        @door_appearance = "curtain_door"
+        @door_appearance = "fancy_door"
         descriptors = ["beautiful","magnificient","gorgeous","golden","splendid","brilliant","shining","glorious","grand","grandiose","stately","noble","marvelous"]
         door_description = "Ahead stands a " + descriptors.sample + " door, which leaves your party awestruck."
         @description = door_description

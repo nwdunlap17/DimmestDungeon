@@ -169,6 +169,7 @@ class Treasure < ActiveRecord::Base
         selection.atk += given_treasure.attack
         selection.defense += given_treasure.defense
         Ownership.create(adventurer_id: selection.id, treasure_id: given_treasure.id)
+        selection.save
     end
     def self.give_blessing_to_party(party,given_treasure,text_log)
         text_log.write("For overcoming this trial, your party has received a #{given_treasure.name}")
@@ -181,6 +182,7 @@ class Treasure < ActiveRecord::Base
             selection.atk += given_treasure.attack
             selection.defense += given_treasure.defense
             Ownership.create(adventurer_id: selection.id, treasure_id: given_treasure.id)
+            selection.save
         end
     end
     def self.display(party,given_treasure)
