@@ -118,7 +118,7 @@ class CombatManager
                 stun_symbol = "@"
             end
             Curses.setpos(index,9)
-            Curses.addstr " #{monsters_position[index].name}" + stun_symbol + " HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP}"
+            Curses.addstr " " + stun_symbol + "#{monsters_position[index].name}" + "  HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP}"
             
         end
         @text_log.display_text

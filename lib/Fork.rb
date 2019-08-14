@@ -14,13 +14,14 @@ class Fork
 
     def generate_rooms
         rooms = rand(2)+2
+
         if @dungeon_depth == 31
             @rooms_in_fork << Room.new(@dungeon_depth)
             @room_labels << "The End"
         elsif @dungeon_depth % 10 == 0
                 @rooms_in_fork << Room.new(@dungeon_depth)
                 @room_labels << "Passage"
-            else
+        else
             rooms.times do |counter|
             @rooms_in_fork << Room.new(@dungeon_depth)
             @room_labels << "Door #{counter+1}"
@@ -30,8 +31,8 @@ class Fork
 
     def get_door_appearance(room)
         string = []
-        case room.room_type
-        when "monster_room"
+        case room.door_appearance
+        when "wooden_door"
         string = ["     ______     ",
         "  ,-' ;  ! `-.  ",
         " / :  !  :  . \\ ",
@@ -45,7 +46,7 @@ class Fork
         "|/ .  :  :  .  |",
         "|____;-----;___|"]
 
-        when "treasure_room"
+        when "fancy_door"
         string = ["_____~/()\\~_____",
         "|   ___  ___   |",
         "|  |   ||   |  |",
@@ -59,7 +60,7 @@ class Fork
         "|  |___||___|  |",
         "|______________|"]
 
-        when "safe_room"
+        when "modern_door"
         string =   [" ______________",
                     "|  |  |  |  |  |",
                     "|  |--------|  |",
@@ -73,11 +74,11 @@ class Fork
                     "|  |  |  |  |  |",
                     "|__|__|__|__|__|"]
 
-        when "boss_room"
+        when "passage_way"
         string =   ["        ____    ",
-        "     __/    \   ",
-        "    /        \  ",
-        "   |          \ ",
+        "     __/    \\   ",
+        "    /        \\  ",
+        "   |          \\ ",
         "   \\          / ",
         "   /         /  ",
         " /           \\  ",
@@ -91,8 +92,9 @@ class Fork
 
 
     def generate_doors
-        doors_array = @rooms_in_fork.map do |room|
-            get_door_appearance(room)
+        doors_array = []
+        @rooms_in_fork.each do |room|
+            doors_array << get_door_appearance(room)
         end
         return doors_array
     end
