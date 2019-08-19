@@ -13,9 +13,9 @@ Start the game in terminal by system command: rake run
 
 Controls
 -	Use the WSD keys for selection
-W – Scrolls cursor up.
-S – Scroll cursor down.
-D – Selection at where your cursor is.
+    W – Scrolls cursor up.
+    S – Scroll cursor down.
+    D – Selection at where your cursor is.
 -	Your cursor will be this:   -->
 -	The character whose turn it is has an indication in their party menu: >
 
@@ -26,9 +26,9 @@ Gameplay Tips
 
 Player Stats
 	(HP) Health Points are the life of your adventurer, if it reaches 0, they die.
-(MP) Mana points are the points you can expend to use abilities, if this reaches 0, the character can only use basic attacks.
-(ATK) Attack determines how much offensive damage a certain character can do with basic attacks or skills/spells.
-(DEF) Defense determines how much damage can be blocked from enemy attacks.
+    (MP) Mana points are the points you can expend to use abilities, if this reaches 0, the character can only use basic attacks.
+    (ATK) Attack determines how much offensive damage a certain character can do with basic attacks or skills/spells.
+    (DEF) Defense determines how much damage can be blocked from enemy attacks.
 
 Dungeon Options:
  You start off in a dungeon and will start your journey! 
@@ -42,9 +42,13 @@ Combat Options:
 -	When you use the stun mechanic, it will give a chance for the monster to lose their next turn, this is denoted by an “@” sign next to their name.
 -	Each player and monster will have a turn. On your adventurers’ turns, pick from using a basic attack, your skills, or a potion/elixir.
 -	
+
 Tavern Options:
-Hire member: This is where you can obtain new adventurers for your party.  Each character class will have several options for skills specific to their class. Since they are randomly generated you can choose what combo of skills best fits your party.
-View Party: Displays your party stats.
+- Hire member: This is where you can obtain new adventurers for your party.  Each character class will have several options for skills specific to their class. Since they are randomly generated you can choose what combo of skills best fits your party.
+- View Party: Displays your party stats.
 	Magic Items: View what magical items are currently equipped on which characters.
 	Dismiss: A chance to get rid of someone in your party if they aren’t fitting your party style.
+- To Dungeon: Start a dungeon run.
+- Heal Party: Expend coins(money) to heal up your party members.
+- Quit Game: Exits game to terminal.
 	
