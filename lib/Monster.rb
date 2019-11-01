@@ -28,10 +28,12 @@ class Monster  < ActiveRecord::Base
             name = minion_hash["name"]
             level = minion_hash["cost"]
             description = minion_hash["flavor"]
-            Monster.create(name: name, description: description, atk: attack, defense: 0, max_HP: health, level: level)
-            Monster.create(name: "Katana", description: "She's just happy to be here.", atk: 6, defense: 0, max_HP: 70, level: 0)
-            Monster.create(name: "Nick", description: "It'll be a shame to kill you", atk: 4, defense: 0, max_HP: 120, level: 0)
+            if description.length <= 95 
+                Monster.create(name: name, description: description, atk: attack, defense: 0, max_HP: health, level: level)
+            end
         end
+        Monster.create(name: "Katana", description: "She's just happy to be here.", atk: 6, defense: 0, max_HP: 70, level: 0)
+        Monster.create(name: "Nick", description: "Really sorry about killing you.", atk: 4, defense: 0, max_HP: 120, level: 0)
     end
 
     def self.new_boss_monster(power = 6)

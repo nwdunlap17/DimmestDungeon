@@ -121,11 +121,51 @@ class CombatManager
             Curses.addstr " " + stun_symbol + "#{monsters_position[index].name}" + "  HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP}"
             
         end
+        display_monsters()
         @text_log.display_text
         Curses.setpos(0,76)
         Curses.addstr "Depth: #{@depth}"
         Curses.refresh
     end
+
+
+    def display_monsters
+        top = 7
+        left = 10
+        midleft = 30
+        cenleft = 37
+        mid = 50
+        cenright = 63
+        midright = 70
+        right = 90
+        case @monsters_position.length
+        when 1
+            draw_monster(monster_art(),top,mid)
+        when 2
+            draw_monster(monster_art(),top,midleft)
+            draw_monster(monster_art(),top,midright)
+        when 3
+            draw_monster(monster_art(),top,left)
+            draw_monster(monster_art(),top,mid)
+            draw_monster(monster_art(),top,right)
+        when 4
+            draw_monster(monster_art(),top,left)
+            draw_monster(monster_art(),top,cenleft)
+            draw_monster(monster_art(),top,cenright)
+            draw_monster(monster_art(),top,right)
+        end
+    end
+
+    def draw_monster(monster_string,y,x)
+        monster_string.length.times do |counter|
+            Curses.setpos(y+counter,x)
+            Curses.addstr(monster_string[counter])
+        end
+    end 
+
+    def monster_art
+        return ["    _______     ","   /  ___  \\    ","  / /#####\\ \\   "," | |#######| |  ","  \\_\\#####/_/   "," |\\ /      \\    "," || |    |==+==|"," || |    |+=+=+|","<||>|    |+=+=+|"," () |     \\___/ ","    |_______|   ","    |_|   |_|   "]
+    end 
 
     def display_adventurers(character_picked)
 
@@ -295,7 +335,7 @@ class CombatManager
         ally_targets = ally_array
     when "1 Enemy"
         enemy_names = enemy_array.map {|foe| foe.name}
-        enemy_targets << Menu.start(enemy_names,enemy_array,0,6,enemy_descriptions)
+        enemy_targets << Menu.start(enemy_names,enemy_array,0,7,enemy_descriptions)
     when "1 Ally"
         ally_names = ally_array.map {|ally| ally.name}
         ally_targets << Menu.start(ally_names,ally_array,Curses.lines-11,0)
