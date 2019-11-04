@@ -4,6 +4,7 @@ class Tavern
         @carousel = []
         @party = party_instance
         @text_log = text_log
+        display
         fill_carousel
         tavernLoop
     end

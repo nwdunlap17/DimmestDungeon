@@ -3,7 +3,7 @@ class ExplorationLoop
     def initialize
         @text_log = Text_Log.new
         @party = Party.new
-        @depth = 10
+        @depth = 1
         select_room
     end
 
@@ -31,7 +31,6 @@ class ExplorationLoop
                 choice = Menu.start(choice_names,values,Curses.lines-6,0,descriptions)
                 if choice == "To Tavern"
                     Tavern.new(@party,@text_log)
-                    @text_log.write("You enter the dungeon...")
                     @depth = 1
                     @fork_instance = Fork.new(@depth)
                     new_fork = true
@@ -115,7 +114,8 @@ class ExplorationLoop
         if restore_amount > 0
             @text_log.write("#{target.name} gratefully accepts the elixir. They restored #{restore_amount} MP.")
         end
-     end
+    end
+
 
     def display(string="")
         Curses.clear

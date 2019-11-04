@@ -75,7 +75,6 @@ class CombatManager
         end
     end
 
-
     def choose_action_for_character(adventurer)
         choices = []
         choices << Action.basic_attack
@@ -121,11 +120,50 @@ class CombatManager
             Curses.addstr " " + stun_symbol + "#{monsters_position[index].name}" + "  HP: #{monsters_position[index].current_HP} / #{monsters_position[index].max_HP}"
             
         end
+        display_monsters()
         @text_log.display_text
         Curses.setpos(0,76)
         Curses.addstr "Depth: #{@depth}"
         Curses.refresh
     end
+
+    def display_monsters
+        top = 7
+        left = 10
+        midleft = 30
+        cenleft = 37
+        mid = 50
+        cenright = 63
+        midright = 70
+        right = 90
+        case @monsters_position.length
+        when 1
+            draw_monster(monster_art(),top,mid)
+        when 2
+            draw_monster(monster_art(),top,midleft)
+            draw_monster(monster_art(),top,midright)
+        when 3
+            draw_monster(monster_art(),top,left)
+            draw_monster(monster_art(),top,mid)
+            draw_monster(monster_art(),top,right)
+        when 4
+            draw_monster(monster_art(),top,left)
+            draw_monster(monster_art(),top,cenleft)
+            draw_monster(monster_art(),top,cenright)
+            draw_monster(monster_art(),top,right)
+        end
+    end
+
+    def draw_monster(monster_string,y,x)
+        monster_string.length.times do |counter|
+            Curses.setpos(y+counter,x)
+            Curses.addstr(monster_string[counter])
+        end
+    end 
+
+    def monster_art
+        return ["    _______     ","   /  ___  \\    ","  / /#####\\ \\   "," | |#######| |  ","  \\_\\#####/_/   "," |\\ /      \\    "," || |    |==+==|"," || |    |+=+=+|","<||>|    |+=+=+|"," () |     \\___/ ","    |_______|   ","    |_|   |_|   "]
+    end 
 
     def display_adventurers(character_picked)
 
@@ -164,14 +202,6 @@ class CombatManager
         end
     end
 
-    def apply_damage(damaged_object,damage_dealt)
-        #damaged_object = instance of monster or adventurer that is damaged
-        #damage_dealt = some integer value of damage
-        current_HP = damaged_object.current_health
-        new_health = current_HP - damage_dealt
-        damaged_object.current_health = new_health
-    end
-
     def check_for_dead
         self.heroes_position.each do |hero|
             if hero.alive? == false
@@ -200,11 +230,6 @@ class CombatManager
             index += 1
         end
     end
-
-
-        #invisibility pulls one aggro
-        #increase aggro adds two aggro
-        #heroes_aggro.sample = defender
 
         # actor is Combatant
     # action is used Action
@@ -245,6 +270,8 @@ class CombatManager
         damage_dealt = 1
     end
     defender.current_HP -= damage_dealt
+    # @text_log.write("#{attacker.atk}*#{attacker.atk_multi}*#{action.damage_multiplier} = #{attack_power}")
+    # @text_log.write("#{defense_power}")
     @text_log.write("#{defender.name} took #{damage_dealt} damage!")
  end
 
@@ -294,7 +321,13 @@ class CombatManager
     when "All Allies"
         ally_targets = ally_array
     when "1 Enemy"
-        enemy_names = enemy_array.map {|foe| foe.name}
+        enemy_names = enemy_array.map { |foe| 
+            stun_symbol = " "
+            if foe.stunned
+                stun_symbol = '@'
+            end
+            "#{stun_symbol}#{foe.name}"
+        }
         enemy_targets << Menu.start(enemy_names,enemy_array,0,6,enemy_descriptions)
     when "1 Ally"
         ally_names = ally_array.map {|ally| ally.name}

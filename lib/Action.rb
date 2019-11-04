@@ -93,14 +93,14 @@ class Action < ActiveRecord::Base
         skill.save
         skill = Action.make_buff("Mage","Vanish",2,"self",0,0,0,0,-1,"Makes the mage less likely to be hit")
         skill.save
-        skill = Action.make_buff("Mage","Shield",2,"self",0,1,0,0,0,"Significantly raises own DEF")
+        skill = Action.make_buff("Mage","Shield",2,"self",0,2,0,0,0,"Significantly raises own DEF")
         skill.save
 
         skill = Action.make_attack("Fighter","Strike",2,false,3,0,"A powerful attack")
         skill.save
         skill = Action.make_attack("Fighter","Wallop",2,false,1,0.8,"An attack that stuns the target")
         skill.save
-        skill = Action.make_buff("Fighter","Bulk Up",2,"self",0.5,0.5,0,0,0,"Raises ATK and DEF")
+        skill = Action.make_buff("Fighter","Bulk Up",2,"self",0.5,1,0,0,0,"Raises ATK and DEF")
         skill.save
         skill = Action.make_buff("Fighter","Taunt",2,"self",0,0,0,0,2,"Makes yourself more likely to be hit")
         skill.save
@@ -109,7 +109,7 @@ class Action < ActiveRecord::Base
         skill = Action.make_buffing_attack("Fighter","Charge!",2,1.5,0,0.5,0,0,0,"A strong attack that raises ATK.")
         skill.save
 
-        skill = Action.make_buff("Cleric","Protect",2,"all",0,0.5,0,0,0,"Raises everyone's DEF.")
+        skill = Action.make_buff("Cleric","Protect",2,"all",0,1,0,0,0,"Raises everyone's DEF.")
         skill.save
         skill = Action.make_buff("Cleric","Heal",2,"one",0,0,0.6,0,0,"Heals one target.")
         skill.save
