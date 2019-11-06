@@ -94,14 +94,14 @@ class CombatManager
             description_of_choices << action.description
         end
         choices.length.times do |index|
-            if adventurer.current_MP < choices[index].mp_cost
-                choices[index] = nil
-                description_of_choices[index] += " NOT ENOUGH MP"
-            end
             if choices[index].action_name == "Potion"
                 description_of_choices[index] += "#{@party.potions}."
             elsif choices[index].action_name == "Elixir"
                 description_of_choices[index] += "#{@party.elixirs}."
+            end
+            if adventurer.current_MP < choices[index].mp_cost
+                choices[index] = nil
+                description_of_choices[index] += " NOT ENOUGH MP"
             end
         end
         return Menu.start(names_of_choices,choices,Curses.lines-6,1,description_of_choices)
