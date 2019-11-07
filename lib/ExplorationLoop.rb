@@ -3,7 +3,7 @@ class ExplorationLoop
     def initialize
         @text_log = Text_Log.new
         @party = Party.new
-        @depth = 31
+        @depth = 1
         select_room
     end
 
