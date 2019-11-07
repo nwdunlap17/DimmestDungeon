@@ -3,15 +3,14 @@ class ExplorationLoop
     def initialize
         @text_log = Text_Log.new
         @party = Party.new
-        @depth = 1
+        @depth = 31
         select_room
     end
 
     def select_room
         @fork_instance = Fork.new(@depth)
-        @text_log.write("You wake up in darkness alongside equally confused others.")
-        @text_log.write("Some are crying, others still laying unconscious.")
-        @text_log.write("After some time, a #{@party.heroes_array[1].job} named #{@party.heroes_array[1].name} suggests you band together.")
+        @text_log.write("Your party ventures into the dungeon, led by a #{@party.heroes_array[1].job} named #{@party.heroes_array[1].name}.")
+        @text_log.write("Will you find glory or death in these dark halls?")
         while true
             choice_names = @fork_instance.room_labels 
             values = @fork_instance.rooms_in_fork
@@ -86,7 +85,7 @@ class ExplorationLoop
                         @party.elixirs -= 1
                         end
                     else 
-                        @text_log.write("Elixir not used. Insufficient amount of potions in inventory.")
+                        @text_log.write("Elixir not used. Insufficient amount of elixers in inventory.")
                     end
                 end
             when "Back"
@@ -185,15 +184,33 @@ class ExplorationLoop
         sleep(delay)
         display("cutscene")
         sleep(delay)
-        choice = Menu.start(["No","Yes"],["No","Yes"],Curses.lines-6,0,["Congratulations on your victory!","You won't like what comes next"])
+        choice = Menu.start(["No","Yes"],["No","Yes"],Curses.lines-6,0,["Congratulations on your victory!","You won't like what comes next."])
         case choice
         when "Yes"
             monsters_position = []
             monsters_position << Monster.final_boss(0)
             monsters_position << Monster.final_boss(1)
             CombatManager.new(@party,monsters_position,@text_log,31)
-            
+            win_game()
         when "No"
+            win_game()
         end
+    end
+
+    def win_game
+        counter = 5
+            5.times do
+                    Curses.clear
+                Curses.setpos(10,10)
+                Curses.addstr"Your party was victorious. You have won the game!"
+                Curses.setpos(11,10)
+                Curses.addstr"Game will automatically exit in 5 seconds. But your characters will be in the tavern when you get back!"
+                Curses.setpos(12,10)                
+                Curses.addstr"Game terminating in #{counter}."
+                Curses.refresh
+                counter -= 1
+                sleep(1)
+            end
+        exit
     end
 end

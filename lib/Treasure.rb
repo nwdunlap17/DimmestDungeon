@@ -13,6 +13,11 @@ class Treasure < ActiveRecord::Base
         Treasure.defineMagicItem("Bangle of Defense",0,0,0,2)
         Treasure.defineMagicItem("Helm of Might",5,0,1,0)
         Treasure.defineMagicItem("Magic Bracers",0,2,0,1)
+        Treasure.defineMagicItem("Philosopher Stone",25,0,0,0,'epic')
+        Treasure.defineMagicItem("Magic Tome",0,12,0,0,'epic')
+        Treasure.defineMagicItem("Vorpal Sword",0,0,5,0,'epic')
+        Treasure.defineMagicItem("Dragon Tooth",0,0,0,5,'epic')
+        Treasure.defineMagicItem("Potion of Awesomeness",10,5,2,2,'epic')
         Treasure.defineMoney("Small Bag of Coins",20)
         Treasure.defineMoney("Large Bag of Coins",50)
         Treasure.defineMoney("Small Treasure Chest",200)
@@ -55,10 +60,10 @@ class Treasure < ActiveRecord::Base
         treas.save
     end
 
-    def self.defineMagicItem(name,max_HP,max_MP,atk,defense)
+    def self.defineMagicItem(name,max_HP,max_MP,atk,defense,rarity = 'rare')
         treas = Treasure.new()
         treas.name = name
-        treas.rarity = "rare"
+        treas.rarity = rarity
         treas.treasure_type = "Magic Item"
         treas.max_HP = max_HP
         treas.max_MP = max_MP

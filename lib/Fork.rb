@@ -13,7 +13,7 @@ class Fork
     end
 
     def generate_rooms
-        rooms = rand(2)+2
+        rooms = [2,2,3].sample
 
         if @dungeon_depth == 31
             @rooms_in_fork << Room.new(@dungeon_depth)
@@ -88,13 +88,16 @@ class Fork
         "/             / ", 
         "\\            /  "]
         end
+        return string
     end
 
 
     def generate_doors
         doors_array = []
+        hit = false
         @rooms_in_fork.each do |room|
             doors_array << get_door_appearance(room)
+            hit = true
         end
         return doors_array
     end
@@ -120,6 +123,7 @@ class Fork
     end
 
     def draw_door(door_string,y,x)
+
         door_string.length.times do |counter|
             Curses.setpos(y+counter,x)
             Curses.addstr(door_string[counter])

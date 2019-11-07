@@ -54,8 +54,10 @@ class CombatManager
                     #select_target(character_picked,Action.basic_attack,monsters_position,heroes_position)
                 else
                     #monster
-                    monsters_target = @heroes_aggro.sample
-                    execute_action(character_picked,Action.basic_attack,[monsters_target],[])
+                    if monsters_position.include?(character_picked)
+                        monsters_target = @heroes_aggro.sample
+                        execute_action(character_picked,Action.basic_attack,[monsters_target],[])
+                    end
                 end
             end
             battle_array.delete(character_picked)

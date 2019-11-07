@@ -100,10 +100,11 @@ class Room
     end
 
     def final_room 
-        @door_appearance = "safe_room"
-        @description = "Your trials over, victory is at hand."
+        @door_appearance = "modern_door"
+        @description = "Your trial is over, victory is at hand."
         @room_type = "final_room"
     end
+    
     def enter_final_room(exploreloop)
         exploreloop.final_room
     end
